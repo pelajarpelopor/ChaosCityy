@@ -1,0 +1,2992 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#7856db">
+<meta name="description" content="CHAOS CITY: Ripple Effect — game edukasi keselamatan lalu lintas.">
+<title>CHAOS CITY — Ripple Effect</title>
+
+<style>
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap");
+
+:root{
+  --bg:#f5f2fc;
+  --paper:#fff;
+  --ink:#332d4d;
+  --muted:#9285a6;
+  --purple:#7956dc;
+  --purple-dark:#5935b4;
+  --lavender:#ede4ff;
+  --pink:#ffa2bc;
+  --yellow:#ffd36b;
+  --mint:#9bd9b7;
+  --blue:#85cfdf;
+  --line:#e9e0f2;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font:14px "DM Sans",sans-serif;
+}
+button,input,select{font:inherit}
+button{
+  border:0;
+  background:none;
+  color:inherit;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,input:focus-visible,select:focus-visible{
+  outline:3px solid #ffbc53;
+  outline-offset:4px;
+}
+h1,h2,h3,.brand{font-family:"Space Grotesk",sans-serif}
+h1{font-size:clamp(27px,3vw,38px);letter-spacing:-1.2px;margin:8px 0}
+h2{font-size:24px;letter-spacing:-.6px;margin:0 0 14px}
+h3{margin:0 0 8px;font-size:17px}
+p{line-height:1.7;color:var(--muted)}
+small,.small{font-size:11px}
+.muted{color:var(--muted)}
+.eyebrow{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1.7px;
+  text-transform:uppercase;
+}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.wrap{flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+
+.shell{display:grid;grid-template-columns:224px minmax(0,1fr);min-height:100vh}
+.sidebar{
+  position:fixed;
+  inset:0 auto 0 0;
+  width:224px;
+  padding:24px 18px;
+  background:#fffdfd;
+  border-right:1px solid var(--line);
+  display:flex;
+  flex-direction:column;
+  z-index:10;
+}
+.logo{display:flex;align-items:center;gap:5px;margin-bottom:30px}
+.guardian-logo{width:64px;height:82px;flex-shrink:0;overflow:visible}
+.logo-character{transform-origin:center bottom;animation:character-hop 3.5s infinite}
+.brand{font-size:20px;line-height:1.1;font-weight:700;color:#55427f;letter-spacing:-.7px}
+.brand small{
+  display:block;
+  font:8px "DM Sans",sans-serif;
+  letter-spacing:2.7px;
+  margin-top:8px;
+}
+.nav{display:flex;flex-direction:column;gap:8px}
+.nav button{
+  padding:13px 16px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-align:left;
+  color:#9a8ba9;
+  transition:.2s;
+}
+.nav button span:first-child{font-size:21px;width:24px}
+.nav button:hover{background:#f0e8fc;color:var(--purple)}
+.nav button.active{
+  background:var(--purple);
+  color:white;
+  box-shadow:0 6px 16px #7856db2c;
+}
+.sidebottom{margin-top:auto}
+.sidecard{
+  background:#eee6fb;
+  padding:17px;
+  margin-top:18px;
+  border:1px solid #e1d3f6;
+  border-radius:15px;
+}
+.sidecard p{font-size:11px;margin-bottom:0}
+.main{
+  grid-column:2;
+  padding:0 34px 35px;
+  width:100%;
+  max-width:1600px;
+  margin:auto;
+}
+.topbar{
+  height:88px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:29px;
+}
+.topbrand,.topright{display:flex;align-items:center;gap:14px}
+.topbrand .guardian-logo{display:none}
+.coin{
+  padding:9px 14px;
+  border-radius:24px;
+  border:1px solid #f0d692;
+  background:#fff1c9;
+  color:#a4751e;
+  font-weight:700;
+  white-space:nowrap;
+}
+.avatar{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  background:#eadcff;
+  display:grid;
+  place-items:center;
+}
+.welcome{margin-bottom:25px}
+.welcome p{margin:8px 0}
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 11px;
+  border-radius:20px;
+  background:var(--lavender);
+  color:#825cb5;
+  font-size:10px;
+  font-weight:700;
+}
+.btn{
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  gap:11px;
+  background:var(--purple);
+  color:white;
+  font-weight:700;
+  padding:13px 18px;
+  border-radius:11px;
+  box-shadow:0 4px 0 var(--purple-dark);
+  transition:transform .15s,box-shadow .15s;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--purple-dark)}
+.btn:active{transform:translateY(3px);box-shadow:none}
+.btn.light{
+  background:white;
+  color:var(--purple);
+  border:1px solid var(--line);
+  box-shadow:0 3px 0 #e1d6ee;
+}
+.btn.yellow{
+  background:var(--yellow);
+  color:#885b1f;
+  box-shadow:0 4px 0 #dfad3f;
+}
+.link{font-size:12px;color:#8b66ba;font-weight:600}
+.card{
+  background:white;
+  border:1px solid var(--line);
+  padding:22px;
+  border-radius:18px;
+  box-shadow:0 4px 0 #e8dff144;
+}
+.dashboard{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 280px;
+  gap:23px;
+}
+.hero{
+  position:relative;
+  min-height:435px;
+  background:linear-gradient(115deg,#eee4ff,#e6f4ff 70%,#d4f4e9);
+  border:2px solid white;
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:0 7px 0 #e4dcf1;
+}
+.hero-text{
+  position:absolute;
+  left:27px;
+  top:32px;
+  width:280px;
+  z-index:3;
+  pointer-events:none;
+}
+.hero-text button{pointer-events:auto}
+.hero-text h2{font-size:39px;line-height:1.12;margin:16px 0;letter-spacing:-1.2px}
+.hero-text h2 span{color:var(--purple)}
+.hero-text p{font-size:12px;max-width:205px;color:#867598}
+.hero-text .pill{background:#ffffffb8;font-size:9px}
+.hero-footer{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  z-index:4;
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  padding:14px 22px;
+  background:#ffffffbd;
+  backdrop-filter:blur(8px);
+  color:#887992;
+  font-size:9px;
+}
+.live{
+  display:inline-block;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#77c292;
+  margin-right:5px;
+  box-shadow:0 0 0 4px #77c29222;
+}
+.rightstack{display:flex;flex-direction:column;gap:20px}
+.kiro-card{
+  background:linear-gradient(#fff7dc,#fffdf5);
+  border-color:#f0dfb7;
+  text-align:center;
+}
+.kiro-card p{font-size:12px}
+.kiro{
+  position:relative;
+  width:95px;
+  height:99px;
+  margin:0 auto 12px;
+  animation:float 3s ease-in-out infinite;
+}
+.kiro-head{
+  position:absolute;
+  top:20px;
+  left:8px;
+  width:80px;
+  height:56px;
+  border:4px solid #9780c9;
+  background:#f4edff;
+  border-radius:25px;
+  box-shadow:0 6px 0 #c7b7e5;
+}
+.kiro-face{
+  position:absolute;
+  inset:9px 6px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:15px;
+  background:#44385f;
+  border-radius:15px;
+}
+.kiro-eye{
+  width:10px;
+  height:13px;
+  border-radius:6px;
+  background:#a2eef0;
+  animation:blink 5s infinite;
+}
+.kiro-antenna{
+  position:absolute;
+  left:46px;
+  top:4px;
+  width:4px;
+  height:17px;
+  background:#a993ce;
+}
+.kiro-antenna:before{
+  content:"";
+  position:absolute;
+  left:-3px;
+  top:-4px;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#ffbf69;
+}
+.kiro-body{
+  position:absolute;
+  bottom:0;
+  left:27px;
+  width:43px;
+  height:22px;
+  border-radius:6px 6px 18px 18px;
+  background:#a68ada;
+}
+.kiro.gold .kiro-head{
+  border-color:#d5ab43;
+  background:#fff3c8;
+  box-shadow:0 6px 0 #e8ce83;
+}
+.kiro.gold .kiro-body{background:#e4bd61}
+.progress{
+  height:8px;
+  background:#ece5f1;
+  border-radius:9px;
+  overflow:hidden;
+  margin:13px 0;
+}
+.progress i{
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,#b093ed,#7958d5);
+  border-radius:inherit;
+  transition:width .5s;
+}
+.challenge{
+  background:linear-gradient(135deg,#ffe5d9,#fff2cb);
+  border-color:#f2d9b7;
+}
+.challenge p{font-size:12px}
+
+/* CUSTOM FEATURE ICONS */
+.quick{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+  margin:25px 0 29px;
+}
+.quick button{
+  min-height:149px;
+  text-align:left;
+  padding:18px;
+  border:1px solid #e6d9f5;
+  border-bottom:4px solid #cdb6ec;
+  background:linear-gradient(130deg,#fff,#f0e8fc);
+  border-radius:16px;
+  transition:.2s;
+}
+.quick button:nth-child(2){
+  background:linear-gradient(130deg,#fff,#def3f7);
+  border-bottom-color:#9ed9e2;
+}
+.quick button:nth-child(3){
+  background:linear-gradient(130deg,#fff,#fff0d9);
+  border-bottom-color:#eaca8b;
+}
+.quick button:nth-child(4){
+  background:linear-gradient(130deg,#fff,#ffe6ef);
+  border-bottom-color:#eeb3cb;
+}
+.quick button:hover{transform:translateY(-5px);box-shadow:0 9px 24px #62458315}
+.feature-art{display:block;width:76px;height:65px;filter:drop-shadow(0 5px 3px #5a42651f)}
+.quick b{display:block;font-size:12px;margin-top:7px}
+.quick small{display:block;font-size:10px;color:#a193ae;margin-top:6px}
+.sectionrow{margin-bottom:16px}
+.sectionrow h2{margin:0;font-size:20px}
+.mission-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.missioncard{padding:0;overflow:hidden;text-align:left;transition:.2s}
+.missioncard:hover{transform:translateY(-4px)}
+.thumb{
+  height:111px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#e9dcfc,#d9edf5);
+}
+.thumb .feature-art{width:104px;height:91px;transition:transform .3s}
+.missioncard:hover .feature-art{transform:rotate(-6deg) scale(1.08)}
+.missionbody{padding:17px}
+.missionbody h3{font-size:14px;margin:9px 0}
+.missionbody p{font-size:11px;margin:7px 0 12px}
+.tag{
+  font-size:9px;
+  letter-spacing:.8px;
+  color:#9b7fba;
+  font-weight:700;
+  text-transform:uppercase;
+}
+.pagehead{margin-bottom:26px}
+.notice{
+  padding:16px;
+  border-radius:12px;
+  background:#eee7fb;
+  margin:18px 0;
+  line-height:1.7;
+  font-size:13px;
+}
+.footer{
+  margin-top:32px;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  font-size:9px;
+  color:#a99eb6;
+}
+.mobile-nav{display:none}
+
+/* CSS 3D CITY */
+.city-stage{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  min-height:380px;
+  perspective:1400px;
+  touch-action:pan-y;
+  background:radial-gradient(ellipse at 52% 65%,#92cdbb33,transparent 60%);
+}
+.hero .city-stage{
+  position:absolute;
+  left:25%;
+  right:-8%;
+  top:-20px;
+  bottom:15px;
+}
+.city-lens{position:absolute;inset:0;perspective:1400px;cursor:grab}
+.city-lens:active{cursor:grabbing}
+.city-island{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:820px;
+  height:620px;
+  transform-style:preserve-3d;
+  transform:
+    translate(-50%,-50%)
+    scale(var(--zoom,.64))
+    rotateX(57deg)
+    rotateZ(var(--spin,-34deg));
+  transition:transform .12s ease-out;
+}
+.terrain{
+  position:absolute;
+  inset:0;
+  background:#a5d6ab;
+  border-radius:32px;
+  box-shadow:0 16px 0 #6d9e8d,0 30px 0 #668b8f,20px 50px 40px #4d668b33;
+  transform:translateZ(-2px);
+}
+.terrain:after{
+  content:"";
+  position:absolute;
+  inset:15px;
+  border:2px solid #c8e7b9;
+  border-radius:24px;
+}
+.road3{
+  position:absolute;
+  background:#748098;
+  transform:translateZ(1px);
+  box-shadow:0 0 0 12px #dfe4e9,0 0 0 15px #a0adbd;
+}
+.road3.horizontal{left:0;top:270px;width:820px;height:84px}
+.road3.vertical{top:0;left:365px;height:620px;width:84px}
+.road3:after{content:"";position:absolute;opacity:.8}
+.road3.horizontal:after{
+  left:0;right:0;top:41px;height:3px;
+  background:repeating-linear-gradient(90deg,#fff0bf 0 20px,transparent 20px 40px);
+}
+.road3.vertical:after{
+  top:0;bottom:0;left:41px;width:3px;
+  background:repeating-linear-gradient(0deg,#fff0bf 0 20px,transparent 20px 40px);
+}
+.crosswalk{
+  position:absolute;
+  width:65px;
+  height:24px;
+  background:repeating-linear-gradient(90deg,#fff8e5 0 7px,transparent 7px 12px);
+  transform:translateZ(3px);
+}
+.garden3{
+  position:absolute;
+  background:#76bf94;
+  border:8px solid #cce2bc;
+  border-radius:50%;
+  transform:translateZ(3px);
+}
+.garden3:after{
+  content:"";
+  position:absolute;
+  inset:15px;
+  border:9px solid #e9d9b8;
+  border-radius:50%;
+}
+.building3{position:absolute;transform-style:preserve-3d}
+.cube3{
+  position:absolute;
+  width:var(--w);
+  height:var(--d);
+  transform-style:preserve-3d;
+  transform:translateZ(var(--lift,0px));
+}
+.cube3>i{position:absolute;display:block;backface-visibility:visible}
+.roof3{
+  width:var(--w);
+  height:var(--d);
+  transform:translateZ(var(--h));
+  background:var(--roof);
+  border:4px solid #ffffff55;
+  border-radius:3px;
+  box-shadow:inset 0 0 0 3px #00000009;
+}
+.front3,.back3{
+  width:var(--w);
+  height:var(--h);
+  transform-origin:top;
+  transform:rotateX(90deg);
+  background-color:var(--color);
+  border:1px solid #0000000c;
+}
+.front3{top:var(--d)}
+.back3{top:0}
+.side3,.left3{
+  width:var(--d);
+  height:var(--h);
+  left:var(--w);
+  transform-origin:top left;
+  transform:rotateZ(90deg) rotateX(90deg);
+  background:var(--side);
+  border:1px solid #0000000c;
+}
+.left3{left:0}
+.windows3{
+  position:absolute;
+  inset:12px 10px 18px;
+  background:repeating-linear-gradient(90deg,#415d89 0 9px,transparent 9px 21px);
+  mask-image:repeating-linear-gradient(0deg,black 0 13px,transparent 13px 25px);
+  opacity:.8;
+}
+.door3{
+  position:absolute;
+  bottom:0;
+  left:calc(50% - 8px);
+  width:16px;
+  height:24px;
+  background:#4d567a;
+  border:3px solid #ffffff55;
+  border-bottom:none;
+}
+.roof3 span{
+  display:grid;
+  place-items:center;
+  height:100%;
+  font:bold 18px "DM Sans",sans-serif;
+  color:#5b5683;
+  letter-spacing:1px;
+  text-shadow:0 2px white;
+}
+.awning3{
+  position:absolute;
+  top:var(--d);
+  width:var(--w);
+  height:18px;
+  transform:translateZ(26px) rotateX(-20deg);
+  background:repeating-linear-gradient(90deg,#fff4d8 0 10px,var(--color) 10px 20px);
+  border-radius:0 0 4px 4px;
+}
+.tree3{position:absolute;width:24px;height:24px;transform-style:preserve-3d}
+.tree3:before{
+  content:"";
+  position:absolute;
+  width:7px;
+  height:36px;
+  left:9px;
+  top:10px;
+  background:#a27d65;
+  transform-origin:bottom;
+  transform:rotateX(-90deg);
+}
+.tree3:after{
+  content:"";
+  position:absolute;
+  inset:-8px;
+  border-radius:50%;
+  background:radial-gradient(circle at 30% 25%,#a1e1a7,#52ad85 65%,#328b76);
+  transform:translateZ(45px);
+  box-shadow:0 10px 0 #459f7a,0 18px 0 #429575,10px 25px 10px #356f7530;
+}
+.car3{
+  position:absolute;
+  width:46px;
+  height:24px;
+  top:280px;
+  left:0;
+  transform-style:preserve-3d;
+  animation:car-east 17s linear infinite;
+}
+.car3.reverse{top:326px;animation:car-west 21s linear infinite;animation-delay:-9s}
+.car3.north{top:0;left:420px;animation:car-north 19s linear infinite;animation-delay:-5s}
+.car3 .cube3{
+  --w:46px;--d:24px;--h:13px;--lift:8px;
+  --roof:#ffd26a;--color:#edac48;--side:#d59142;
+}
+.car3.reverse .cube3{--roof:#ffa7c3;--color:#ed86aa;--side:#c96794}
+.car3.north .cube3{--roof:#a39aef;--color:#877bd3;--side:#665db3}
+.car3 .roof3{border-width:2px;border-radius:7px}
+.cab3{
+  position:absolute;
+  width:25px;
+  height:19px;
+  left:9px;
+  top:2px;
+  background:linear-gradient(90deg,#728aab 0 25%,#d6e9f1 25% 75%,#607b9c 75%);
+  transform:translateZ(30px);
+  border-radius:5px;
+  box-shadow:0 5px 0 #7e9db5;
+}
+.wheel3{
+  position:absolute;
+  width:11px;
+  height:11px;
+  top:24px;
+  border-radius:50%;
+  background:#c8d3df;
+  border:3px solid #3b4257;
+  transform-origin:top;
+  transform:translateZ(8px) rotateX(90deg);
+}
+.wheel3.w1{left:5px}
+.wheel3.w2{left:31px}
+.car3:after{
+  content:"";position:absolute;inset:1px;
+  background:#3c487932;filter:blur(3px);transform:translateZ(2px);
+}
+.walker3{
+  position:absolute;
+  width:12px;height:12px;
+  left:10px;top:247px;
+  transform-style:preserve-3d;
+  animation:person-east 32s linear infinite;
+  animation-delay:var(--delay,0s);
+}
+.walker3>i{
+  position:absolute;
+  width:12px;height:24px;
+  background:linear-gradient(var(--shirt,#a079df) 0 62%,#485578 62%);
+  border-radius:6px 6px 2px 2px;
+  transform-origin:bottom;
+  transform:translateZ(12px) rotateX(-90deg);
+}
+.walker3>i:before{
+  content:"";
+  position:absolute;
+  top:-9px;left:1px;width:10px;height:10px;
+  border-radius:50%;
+  background:#f1bf98;
+  box-shadow:0 -3px 0 #745c60;
+}
+.walker3:after{
+  content:"";position:absolute;inset:0;
+  background:#3e63742b;border-radius:50%;
+}
+.city-pin{
+  position:absolute;
+  width:40px;height:40px;
+  background:white;
+  border:4px solid #9b7be5;
+  border-radius:50% 50% 50% 4px;
+  display:grid;place-items:center;
+  font:bold 14px sans-serif;
+  color:#7050b0;
+  box-shadow:0 6px 14px #4f3b7840;
+  transform-style:preserve-3d;
+  transform:translateZ(120px) rotateZ(calc(-1 * var(--spin,-34deg))) rotateX(-57deg);
+}
+.city-pin.active{
+  background:#805ce1;color:white;border-color:#eee4ff;
+  box-shadow:0 0 0 9px #ad90ed44,0 6px 20px #7652be44;
+}
+.city-pin.locked{border-color:#b7b4c5;color:#9994ab;background:#eeedf2}
+.city-pin:after{
+  content:"";position:absolute;width:2px;height:45px;
+  top:35px;left:15px;background:#9376c66b;pointer-events:none;
+}
+.explore-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px}
+.explore-world{
+  position:relative;
+  border-radius:26px;
+  background:linear-gradient(140deg,#e7e8fb,#d8f3ed);
+  border:2px solid white;
+  box-shadow:0 8px 0 #dfdaed;
+  overflow:hidden;
+}
+.explore-world .city-stage{height:570px}
+.world-label{
+  position:absolute;top:22px;left:23px;z-index:4;pointer-events:none;
+}
+.world-label h3{font-size:22px;margin:8px 0}
+.world-label .pill{background:#ffffffcc}
+.world-controls{
+  position:absolute;
+  left:21px;right:21px;bottom:21px;
+  display:flex;align-items:center;gap:7px;z-index:5;
+}
+.world-controls button{
+  width:37px;height:37px;
+  border:1px solid #e7e0f2;
+  background:#ffffffeb;
+  border-radius:11px;
+  font-size:19px;
+  box-shadow:0 3px 0 #ccc9dc;
+}
+.world-controls small{
+  margin-left:auto;
+  padding:10px;
+  background:#ffffffc9;
+  border-radius:10px;
+  color:#7c7190;
+  font-size:9px;
+}
+.district-detail{
+  padding:24px;background:white;border:1px solid var(--line);border-radius:23px;
+}
+.district-detail .feature-art{width:104px;height:89px;margin-top:13px}
+.district-detail h2{font-size:26px;margin:12px 0}
+.district-detail p{font-size:12px}
+.district-list{display:grid;gap:8px;margin-top:18px}
+.district-list button{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 10px;background:#f7f4fc;border-radius:11px;
+  text-align:left;font-size:11px;
+}
+.district-list button.active{background:#ece3fc;color:#7452be}
+.district-list b{
+  display:grid;place-items:center;width:27px;height:27px;
+  border-radius:8px;background:white;color:#9772c7;
+}
+.mini-route{display:flex;gap:7px;margin:20px 0}
+.mini-route i{height:5px;flex:1;border-radius:5px;background:#e8e0f4}
+.mini-route i.done{background:#93c4ad}
+.night-diorama{background:linear-gradient(140deg,#3f385b,#697e9c)!important}
+.night-diorama .city-stage{filter:brightness(.8) saturate(.8)}
+.night-diorama .windows3{
+  background:#ffe2a0!important;opacity:1;filter:drop-shadow(0 0 4px #ffe2a0);
+}
+.night-diorama .terrain{background:#739e91}
+
+/* MODALS */
+.modalbg{
+  position:fixed;inset:0;z-index:50;
+  background:#30234e9e;backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  padding:18px;
+}
+.modal{
+  width:min(790px,100%);
+  max-height:94vh;overflow:auto;overscroll-behavior:contain;
+  padding:27px;
+  background:#faf7ff;border:2px solid white;border-radius:24px;
+  box-shadow:0 25px 80px #2c184848;
+  animation:appear .22s ease-out;
+}
+.close{
+  float:right;width:32px;height:32px;
+  border-radius:50%;background:#eee6f6;font-size:22px;margin-left:12px;
+}
+.modal h2{margin-top:10px}
+input,select{
+  display:block;width:100%;
+  padding:13px;border:1px solid #e1d6ed;
+  border-radius:10px;background:white;color:var(--ink);
+  margin:8px 0 17px;
+}
+.avatars{display:flex;gap:12px;margin:12px 0 23px}
+.avatars button{font-size:28px;background:#eee5fb;padding:12px;border-radius:12px}
+.avatars .selected{outline:3px solid var(--purple)}
+.gameview{background:#dcebd6;border:2px solid white;border-radius:15px;overflow:hidden}
+#road{display:block;width:100%;aspect-ratio:2/1}
+.hud{
+  display:flex;justify-content:space-between;gap:8px;
+  padding:13px;background:white;font-size:11px;font-weight:700;
+}
+.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:14px 0 18px}
+.controls button{
+  padding:15px 6px;background:white;border:1px solid var(--line);
+  border-bottom:4px solid #ded2f0;border-radius:11px;
+  font-size:12px;user-select:none;
+}
+.controls button:active{
+  transform:translateY(3px);border-bottom-width:1px;background:#e9ddff;
+}
+.ripple{display:flex;gap:9px;margin:18px 0}
+.ripple>div{
+  flex:1;padding:13px;background:#dcefe3;
+  border-radius:11px;font-size:11px;line-height:1.6;
+  animation:appear .5s both;
+}
+.ripple>div:nth-child(2){animation-delay:.2s}
+.ripple>div:nth-child(3){animation-delay:.4s}
+.ripple>div:nth-child(4){animation-delay:.6s}
+.ripple.bad>div{background:#f9dce3}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:12px}
+th,td{padding:12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);line-height:1.6}
+.choices{display:grid;gap:10px;margin:15px 0}
+.choices button{
+  text-align:left;padding:16px;background:white;
+  border:1px solid var(--line);border-radius:11px;line-height:1.6;
+}
+.choices button:hover{background:#eee5fc}
+.evidence{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}
+.evidence button{padding:14px;border:1px solid var(--line);border-radius:11px;background:white}
+.evidence .found{background:#d7efd9}
+.scene-emoji{
+  text-align:center;padding:30px;font-size:40px;
+  background:linear-gradient(120deg,#e5e4fb,#d4eef2);
+  border-radius:15px;line-height:1.8;
+}
+.badge{font-size:40px;margin-bottom:15px}
+.toast{
+  position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
+  z-index:100;max-width:calc(100vw - 32px);
+  padding:15px 23px;background:#594090;color:white;border-radius:13px;
+  box-shadow:0 8px 30px #31234630;text-align:center;font-size:13px;
+}
+.confetti{
+  position:fixed;top:-15px;width:9px;height:15px;
+  pointer-events:none;z-index:80;animation:confetti-fall 2.8s linear forwards;
+}
+.night-theme{--bg:#eee9fb;--purple:#6b50a9;--purple-dark:#4d357f}
+.no-motion *,.no-motion *:before,.no-motion *:after{
+  animation:none!important;transition:none!important;
+}
+
+@keyframes float{50%{transform:translateY(-6px)}}
+@keyframes blink{
+  0%,43%,47%,100%{transform:scaleY(1)}
+  45%{transform:scaleY(.1)}
+}
+@keyframes character-hop{
+  0%,70%,100%{transform:translateY(0) rotate(0)}
+  80%{transform:translateY(-5px) rotate(-4deg)}
+  90%{transform:translateY(-3px) rotate(4deg)}
+}
+@keyframes appear{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes confetti-fall{
+  to{transform:translateY(110vh) rotate(700deg);opacity:0}
+}
+@keyframes car-east{
+  from{transform:translateX(-65px) translateZ(8px)}
+  to{transform:translateX(840px) translateZ(8px)}
+}
+@keyframes car-west{
+  from{transform:translateX(840px) translateZ(8px) rotateZ(180deg)}
+  to{transform:translateX(-65px) translateZ(8px) rotateZ(180deg)}
+}
+@keyframes car-north{
+  from{transform:translateY(-55px) translateZ(8px) rotateZ(90deg)}
+  to{transform:translateY(650px) translateZ(8px) rotateZ(90deg)}
+}
+@keyframes person-east{
+  from{transform:translateX(30px)}
+  to{transform:translateX(740px)}
+}
+
+@media(max-width:1150px){
+  .sidebar{width:190px;padding:22px 13px}
+  .shell{grid-template-columns:190px minmax(0,1fr)}
+  .brand{font-size:17px}
+  .guardian-logo{width:53px}
+  .main{padding:0 23px 30px}
+  .dashboard,.explore-layout{grid-template-columns:1fr}
+  .rightstack{display:grid;grid-template-columns:1fr 1fr}
+  .kiro-card{text-align:left}
+  .kiro-card .kiro{float:left;margin-right:15px}
+  .topright .muted{display:none}
+  .district-detail{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .district-list{margin-top:0}
+  .explore-world .city-stage{height:520px}
+}
+
+@media(max-width:700px){
+  .shell{display:block}
+  .sidebar{display:none}
+  .main{padding:0 17px 100px}
+  .topbar{height:73px;margin-bottom:23px}
+  .topbrand{gap:5px}
+  .topbrand .guardian-logo{display:block;width:35px;height:48px}
+  .topbrand .eyebrow{max-width:125px;font-size:8px;line-height:1.5;letter-spacing:1px}
+  .topright{gap:9px}
+  .coin{padding:8px 11px}
+  .welcome>.pill{display:none}
+  .welcome p{font-size:12px}
+  .welcome .eyebrow{font-size:9px}
+  .hero{min-height:470px}
+  .hero-text{left:20px;top:22px;width:275px}
+  .hero-text h2{font-size:31px;margin:13px 0}
+  .hero-text p{font-size:11px;max-width:205px}
+  .hero .btn{padding:11px 15px}
+  .hero .city-stage{left:-15%;right:-30%;top:150px;bottom:0;min-height:300px}
+  .hero .city-island{--zoom:.42!important}
+  .hero-footer{padding:13px 12px;font-size:8px}
+  .quick{grid-template-columns:repeat(2,1fr);gap:11px}
+  .quick button{min-height:135px;padding:15px}
+  .feature-art{width:65px;height:58px}
+  .quick small{font-size:9px}
+  .mission-grid,.grid{grid-template-columns:1fr}
+  .missioncard{display:flex}
+  .thumb{width:108px;height:auto;min-height:140px;flex-shrink:0}
+  .thumb .feature-art{width:88px;height:82px}
+  .missionbody{flex:1;padding:15px}
+  .rightstack{grid-template-columns:1fr}
+  .explore-layout{gap:17px}
+  .explore-world .city-stage{height:465px}
+  .world-label{left:17px;top:18px}
+  .world-label h3{font-size:19px}
+  .world-controls{left:13px;right:13px;bottom:15px}
+  .world-controls small{font-size:8px;max-width:94px}
+  .district-detail{display:block}
+  .district-list{grid-template-columns:1fr 1fr;margin-top:20px}
+  .district-list button{font-size:9px;padding:9px}
+  .mobile-nav{
+    position:fixed;left:0;right:0;bottom:0;
+    display:flex;justify-content:space-around;
+    padding:8px 6px max(8px,env(safe-area-inset-bottom));
+    background:#fffdfd;border-top:1px solid var(--line);z-index:20;
+  }
+  .mobile-nav button{
+    display:flex;flex-direction:column;align-items:center;
+    gap:4px;padding:4px 13px;color:#aaa0b8;font-size:10px;
+  }
+  .mobile-nav button span:first-child{font-size:22px}
+  .mobile-nav button.active{color:var(--purple)}
+  .modalbg{padding:10px}
+  .modal{padding:20px}
+  .controls{gap:5px}
+  .controls button{padding:14px 3px;font-size:10px}
+  .ripple{flex-wrap:wrap}
+  .ripple>div{flex:1 1 40%}
+  .footer{font-size:8px}
+  .toast{bottom:90px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .logo-character,.kiro,.kiro-eye,.car3,.walker3{animation:none}
+}
+</style>
+</head>
+
+<body>
+<div id="app"></div>
+<div id="overlay"></div>
+
+<script>
+"use strict";
+
+/* ========================================
+   STATE & UTILITIES
+======================================== */
+
+const $ = selector => document.querySelector(selector);
+const STORAGE_KEY = "chaos-city-complete-v3";
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, character => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[character]));
+}
+
+const defaults = {
+  name: "Guardian",
+  avatar: "🧑‍🚀",
+  started: false,
+  coins: 0,
+  scores: {},
+  academy: {},
+  daily: {},
+  cases: 0,
+  sound: false,
+  motion: !matchMedia("(prefers-reduced-motion: reduce)").matches,
+  theme: "garden",
+  ownedNight: false,
+  ownedGold: false,
+  kiroGold: false,
+  lastOutcome: "new"
+};
+
+let state;
+
+try {
+  const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+  state = {...defaults, ...stored};
+} catch {
+  state = {...defaults, scores:{}, academy:{}, daily:{}};
+}
+
+let page = "home";
+let selectedDistrict = 0;
+let selectedAvatar = state.avatar;
+let game = null;
+let gameTimer = null;
+let toastTimer = null;
+let previousFocus = null;
+let cameraAngle = -34;
+let cameraZoom = innerWidth < 700 ? .48 : .66;
+let cityNight = false;
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch {
+    toast("Browser ini belum mengizinkan penyimpanan progres.");
+  }
+}
+
+function completedCount() {
+  return Object.keys(state.scores).length;
+}
+
+function citySafety() {
+  const values = Object.values(state.scores);
+  return values.length
+    ? Math.round(values.reduce((a,b) => a+b, 0) / values.length)
+    : 50;
+}
+
+function isUnlocked(index) {
+  return index < 2 || (
+    completedCount() >= index &&
+    citySafety() >= 70
+  );
+}
+
+function todayKey() {
+  const date = new Date();
+  return [
+    date.getFullYear(),
+    String(date.getMonth()+1).padStart(2,"0"),
+    String(date.getDate()).padStart(2,"0")
+  ].join("-");
+}
+
+function dailyCount() {
+  return state.daily[todayKey()] || 0;
+}
+
+function toast(message) {
+  $(".toast")?.remove();
+  clearTimeout(toastTimer);
+
+  const element = document.createElement("div");
+  element.className = "toast";
+  element.setAttribute("role","status");
+  element.textContent = message;
+  document.body.append(element);
+
+  toastTimer = setTimeout(() => element.remove(), 3500);
+}
+
+function confetti() {
+  if (!state.motion) return;
+
+  const colors = ["#ffd569","#ff91b2","#78cfe8","#9bdcba","#a68be8"];
+
+  for (let i=0; i<35; i++) {
+    const item = document.createElement("i");
+    item.className = "confetti";
+    item.style.left = Math.random()*100 + "%";
+    item.style.background = colors[i % colors.length];
+    item.style.animationDelay = Math.random()*.6 + "s";
+    item.style.borderRadius = i % 3 === 0 ? "50%" : "2px";
+    document.body.append(item);
+    setTimeout(() => item.remove(), 3600);
+  }
+}
+
+function beep() {
+  if (!state.sound) return;
+
+  try {
+    const AudioClass = window.AudioContext || window.webkitAudioContext;
+    const audio = new AudioClass();
+    const oscillator = audio.createOscillator();
+    const gain = audio.createGain();
+
+    oscillator.connect(gain);
+    gain.connect(audio.destination);
+    oscillator.frequency.value = 540;
+    gain.gain.value = .035;
+
+    oscillator.start();
+    oscillator.stop(audio.currentTime+.1);
+    setTimeout(() => audio.close(), 300);
+  } catch {}
+}
+
+/* ========================================
+   LOGO & ICON ILLUSTRATIONS
+======================================== */
+
+function guardianLogo() {
+  return `
+    <svg class="guardian-logo" viewBox="0 0 110 130"
+         role="img" aria-label="Anak Guardian memakai helm, jaket dan sepatu">
+      <ellipse cx="55" cy="122" rx="30" ry="6" fill="#403470" opacity=".14"/>
+      <g class="logo-character">
+        <path d="M40 92v19M68 92v19"
+              stroke="#5856ab" stroke-width="15" stroke-linecap="round"/>
+        <path d="M31 115h17M64 115h17"
+              stroke="#ffc746" stroke-width="13" stroke-linecap="round"/>
+        <path d="M35 70 23 88M74 70 85 49"
+              stroke="#ffb584" stroke-width="12" stroke-linecap="round"/>
+        <path d="M32 72q0-15 23-15t23 15v27H32Z" fill="#7960e4"/>
+        <path d="M55 65v34" stroke="#fff2c8" stroke-width="3"/>
+        <path d="M34 82h17M60 82h16" stroke="#e0f376" stroke-width="7"/>
+        <rect x="48" y="53" width="15" height="16" rx="7" fill="#edb17f"/>
+        <ellipse cx="55" cy="40" rx="26" ry="25" fill="#ffd1a7"/>
+        <path d="M25 35Q22 2 55 3q33 0 30 32Z" fill="#ffc841"/>
+        <path d="M52 5v22" stroke="#fff0a4" stroke-width="8"/>
+        <rect x="21" y="28" width="68" height="10" rx="5" fill="#eda72c"/>
+        <circle cx="45" cy="43" r="3" fill="#393354"/>
+        <circle cx="66" cy="43" r="3" fill="#393354"/>
+        <path d="M47 53q8 9 16 0" fill="white" stroke="#aa675c" stroke-width="2"/>
+        <circle cx="36" cy="51" r="4" fill="#f49c8c"/>
+        <circle cx="76" cy="51" r="4" fill="#f49c8c"/>
+      </g>
+    </svg>`;
+}
+
+function kiro() {
+  return `
+    <div class="kiro ${state.kiroGold ? "gold" : ""}" aria-label="Robot KIRO">
+      <i class="kiro-antenna"></i>
+      <div class="kiro-head">
+        <div class="kiro-face">
+          <i class="kiro-eye"></i>
+          <i class="kiro-eye"></i>
+        </div>
+      </div>
+      <div class="kiro-body"></div>
+    </div>`;
+}
+
+function featureArt(index) {
+  const art = [
+    `
+      <path d="M19 53 37 18 57 53Z" fill="#ffbe73" stroke="#fff" stroke-width="5"/>
+      <rect x="31" y="27" width="12" height="22" rx="5" fill="#7458bd"/>
+      <circle cx="37" cy="33" r="3" fill="#ffdd78"/>
+      <circle cx="37" cy="42" r="3" fill="#a4e6bc"/>
+      <path d="M51 20h14v28" stroke="#a495d4" stroke-width="5" fill="none"/>
+      <circle cx="65" cy="48" r="6" fill="#8763cd"/>
+    `,
+    `
+      <path d="m9 28 21-11 21 9 20-9v35L51 62l-21-9-21 9Z"
+            fill="#8acedd" stroke="#fff" stroke-width="3"/>
+      <path d="M30 17v36M51 26v36" stroke="#54aabd" stroke-width="2"/>
+      <path d="M37 24c0-14 22-14 22 0 0 8-11 18-11 18S37 32 37 24"
+            fill="#9d78de"/>
+      <circle cx="48" cy="23" r="4" fill="#fff4ca"/>
+    `,
+    `
+      <path d="M13 22q14-7 25 0 12-7 27 0v35q-15-7-27 0-11-7-25 0Z"
+            fill="#ffc66d" stroke="#fff" stroke-width="3"/>
+      <path d="M38 22v35" stroke="#db9a46" stroke-width="3"/>
+      <path d="M20 31h11M20 39h11M46 31h11M46 39h11"
+            stroke="#fff5de" stroke-width="3"/>
+      <path d="m23 16 16-9 18 9-18 9Z" fill="#ad8be7"/>
+    `,
+    `
+      <path d="M25 16h30v18c0 21-30 21-30 0Z"
+            fill="#ffcf63" stroke="#fff" stroke-width="3"/>
+      <path d="M25 21H15v8c0 10 12 10 12 10M55 21h10v8c0 10-12 10-12 10"
+            fill="none" stroke="#efac58" stroke-width="5"/>
+      <path d="M40 48v9M29 60h22" stroke="#a381d5" stroke-width="6"
+            stroke-linecap="round"/>
+      <path d="m40 24 3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1Z"
+            fill="#fff5cb"/>
+    `,
+    `
+      <circle cx="34" cy="30" r="17" fill="#c6e6ee" stroke="white" stroke-width="4"/>
+      <circle cx="34" cy="30" r="10" fill="#94bed5"/>
+      <path d="m47 44 16 16" stroke="#9b76d7" stroke-width="10" stroke-linecap="round"/>
+      <path d="M29 25h10M29 31h7" stroke="white" stroke-width="3" stroke-linecap="round"/>
+    `,
+    `
+      <rect x="10" y="27" width="46" height="27" rx="7"
+            fill="#fff5dc" stroke="white" stroke-width="3"/>
+      <path d="M56 35h10l7 10v9H56Z" fill="#98d8e4"/>
+      <path d="M28 32v16M20 40h16" stroke="#ee8da9" stroke-width="5"/>
+      <circle cx="24" cy="55" r="7" fill="#7b6a9d"/>
+      <circle cx="61" cy="55" r="7" fill="#7b6a9d"/>
+      <rect x="25" y="21" width="15" height="6" rx="3" fill="#a68be0"/>
+    `
+  ];
+
+  return `
+    <svg class="feature-art" viewBox="0 0 80 70" aria-hidden="true">
+      <ellipse cx="40" cy="61" rx="29" ry="5" fill="#76609d16"/>
+      ${art[index % art.length]}
+      <circle cx="11" cy="13" r="3" fill="#e1cdf8"/>
+      <path d="M67 8v8m-4-4h8" stroke="#ddbaf0" stroke-width="2"/>
+    </svg>`;
+}
+
+/* ========================================
+   MISSION DATA
+======================================== */
+
+const missions = [
+  {
+    name:"The Yellow Light Dilemma",
+    district:"Downtown",
+    description:"Satu persimpangan. Satu keputusan penting.",
+    icon:"🚦",
+    art:0,
+    type:"light",
+    goal:"Lampu berubah kuning. Amati jarak dan kondisi persimpangan sebelum menentukan tindakan.",
+    lesson:"Berhenti sebelum garis henti jika dapat dilakukan dengan aman. Pertimbangkan jarak, kecepatan, dan kondisi belakang. Jangan mempercepat untuk mengejar lampu.",
+    chain:["Kecepatan terkendali","Area konflik terlindungi","Penyeberangan aman","Arus kota lebih tertib"]
+  },
+  {
+    name:"Small Steps, Big Impact",
+    district:"School District",
+    description:"Bantu anak-anak pulang dengan selamat.",
+    icon:"🚸",
+    art:2,
+    type:"cross",
+    goal:"Anak-anak menunggu di zebra cross. Kurangi kecepatan dan berhenti sebelum marka.",
+    lesson:"Dekati zona sekolah dengan kecepatan rendah. Jangan menutup zebra cross dan beri ruang aman kepada pejalan kaki.",
+    chain:["Kendaraan melambat","Marka tetap kosong","Anak-anak menyeberang","Sekolah lebih aman"]
+  },
+  {
+    name:"Every Second Matters",
+    district:"Hospital Zone",
+    description:"Buka jalan untuk sebuah harapan.",
+    icon:"🚑",
+    art:5,
+    type:"ambulance",
+    goal:"Ambulans mendekat. Perlambat, gunakan sein, lalu beri jalan melalui ruang yang tersedia.",
+    lesson:"Beri jalan secara terkendali. Amati ruang sekitar dan hindari manuver mendadak yang menciptakan bahaya baru.",
+    chain:["Ruang diperiksa","Jalur dikosongkan","Ambulans melintas","Akses rumah sakit lancar"]
+  },
+  {
+    name:"Beyond the Headlights",
+    district:"Night City",
+    description:"Tidak semua bahaya terlihat jelas.",
+    icon:"🌙",
+    art:1,
+    type:"night",
+    goal:"Jalan gelap dan ada pejalan kaki di depan. Nyalakan lampu kendaraan dan berhenti secara terkendali.",
+    lesson:"Gunakan lampu kendaraan dan sesuaikan kecepatan dengan jarak pandang. Hindari menyilaukan pengguna jalan lain.",
+    chain:["Lampu menyala","Bahaya lebih terlihat","Kecepatan turun","Pejalan kaki terlindungi"]
+  },
+  {
+    name:"A Little Space to Live",
+    district:"Residential Area",
+    description:"Jalan kecil, tanggung jawab besar.",
+    icon:"🚲",
+    art:1,
+    type:"parking",
+    goal:"Berhenti secara terkendali, nyalakan sein, lalu pilih tempat parkir yang tidak menghalangi jalan.",
+    lesson:"Parkir pada tempat yang diperbolehkan tanpa menghalangi akses, pandangan, atau ruang pengguna jalan lain.",
+    chain:["Parkir di kantong","Jalan tetap lapang","Pesepeda melintas","Aktivitas warga lancar"]
+  },
+  {
+    name:"Leave Room for Tomorrow",
+    district:"Highway District",
+    description:"Jarak aman memberi waktu untuk bereaksi.",
+    icon:"🛣️",
+    art:0,
+    type:"highway",
+    goal:"Mobil di depan melambat. Kurangi kecepatan dan bentuk celah minimal 3 detik pada akhir simulasi.",
+    lesson:"Jarak yang cukup memberi waktu untuk bereaksi. Tambah jarak saat kondisi buruk. Angka dalam game adalah model pembelajaran sederhana, bukan jaminan untuk semua kondisi.",
+    chain:["Jarak bertambah","Waktu reaksi tersedia","Pengereman terkendali","Lajur lebih aman"]
+  }
+];
+
+/* ========================================
+   CSS 3D WORLD GENERATOR
+======================================== */
+
+const buildings = [
+  {x:500,y:75,w:95,d:87,h:125,color:"#b5a0ed",side:"#8e79be",roof:"#e9dcff",label:"CITY"},
+  {x:95,y:70,w:139,d:100,h:67,color:"#ffbf80",side:"#dc986d",roof:"#fff1cd",label:"SCHOOL"},
+  {x:540,y:422,w:142,d:90,h:82,color:"#f4faf6",side:"#b6c6d7",roof:"#ffe8ee",label:"✚"},
+  {x:666,y:116,w:81,d:91,h:154,color:"#96bddd",side:"#718bad",roof:"#d9eaf5",label:"★"},
+  {x:79,y:438,w:90,d:83,h:55,color:"#f3a4ba",side:"#c37f9a",roof:"#ffe2b9",label:"HOME"},
+  {x:244,y:425,w:71,d:88,h:95,color:"#9ecbba",side:"#78a698",roof:"#e5f7d6",label:"GO"}
+];
+
+function buildingCube(b) {
+  return `
+    <div class="cube3" style="
+      --w:${b.w}px;--d:${b.d}px;--h:${b.h}px;
+      --color:${b.color};--side:${b.side};--roof:${b.roof};
+    ">
+      <i class="front3"><i class="windows3"></i><i class="door3"></i></i>
+      <i class="back3"><i class="windows3"></i></i>
+      <i class="left3"><i class="windows3"></i></i>
+      <i class="side3"><i class="windows3"></i></i>
+      <i class="roof3"><span>${b.label}</span></i>
+      <i class="awning3"></i>
+    </div>`;
+}
+
+function createWorld(interactive=false) {
+  const trees = [
+    [35,42],[285,50],[320,205],[36,205],
+    [747,205],[485,210],[740,430],[715,560],
+    [195,550],[35,550],[480,550],[290,555]
+  ];
+
+  return `
+    <div class="city-stage">
+      <div class="city-lens">
+        <div class="city-island" style="
+          --zoom:${interactive ? cameraZoom : .58};
+          --spin:${interactive ? cameraAngle : -34}deg;
+        ">
+          <div class="terrain"></div>
+          <div class="road3 horizontal"></div>
+          <div class="road3 vertical"></div>
+          <div class="crosswalk" style="left:375px;top:235px"></div>
+          <div class="crosswalk" style="left:375px;top:366px"></div>
+
+          <div class="garden3"
+               style="left:227px;top:147px;width:105px;height:91px"></div>
+
+          ${buildings.map(b => `
+            <div class="building3" style="left:${b.x}px;top:${b.y}px">
+              ${buildingCube(b)}
+            </div>
+          `).join("")}
+
+          ${trees.map(([x,y]) => `
+            <div class="tree3" style="left:${x}px;top:${y}px"></div>
+          `).join("")}
+
+          ${["","reverse","north"].map(direction => `
+            <div class="car3 ${direction}">
+              <div class="cube3">
+                <i class="front3"></i><i class="back3"></i>
+                <i class="left3"></i><i class="side3"></i><i class="roof3"></i>
+              </div>
+              <i class="cab3"></i>
+              <i class="wheel3 w1"></i>
+              <i class="wheel3 w2"></i>
+            </div>
+          `).join("")}
+
+          ${Array.from({length:7},(_,i) => `
+            <div class="walker3" style="
+              --delay:-${i*4}s;
+              ${i%2 ? "top:377px;" : ""}
+              --shirt:${["#a079df","#eb8c9d","#e6b650"][i%3]};
+            "><i></i></div>
+          `).join("")}
+
+          ${interactive ? buildings.map((b,i) => `
+            <button class="city-pin
+              ${i===selectedDistrict ? "active" : ""}
+              ${isUnlocked(i) ? "" : "locked"}"
+              style="left:${b.x+b.w/2-15}px;top:${b.y+b.d/2-10}px"
+              aria-label="Pilih ${missions[i].district}"
+              onclick="selectDistrict(${i})">
+              ${isUnlocked(i) ? i+1 : "♙"}
+            </button>
+          `).join("") : ""}
+        </div>
+      </div>
+    </div>`;
+}
+
+function bindCityDrag() {
+  document.querySelectorAll(".city-lens").forEach(lens => {
+    let dragging = false;
+    let startX = 0;
+    let initialAngle = 0;
+
+    lens.addEventListener("pointerdown", event => {
+      if (event.target.closest("button")) return;
+
+      const island = lens.querySelector(".city-island");
+      dragging = true;
+      startX = event.clientX;
+      initialAngle = parseFloat(island.style.getPropertyValue("--spin"));
+      if (!Number.isFinite(initialAngle)) initialAngle = -34;
+
+      lens.setPointerCapture(event.pointerId);
+    });
+
+    lens.addEventListener("pointermove", event => {
+      if (!dragging) return;
+
+      const angle = initialAngle+(event.clientX-startX)*.35;
+      lens.querySelector(".city-island").style.setProperty("--spin",angle+"deg");
+
+      if (lens.closest(".explore-world")) cameraAngle = angle;
+    });
+
+    lens.addEventListener("pointerup",() => dragging=false);
+    lens.addEventListener("pointercancel",() => dragging=false);
+  });
+}
+
+function cameraControl(action) {
+  const island = $(".explore-world .city-island");
+  if (!island) return;
+
+  if (action==="left") cameraAngle-=20;
+  if (action==="right") cameraAngle+=20;
+  if (action==="in") cameraZoom=Math.min(1.05,cameraZoom+.1);
+  if (action==="out") cameraZoom=Math.max(.3,cameraZoom-.1);
+
+  if (action==="reset") {
+    cameraAngle=-34;
+    cameraZoom=innerWidth<700 ? .48 : .66;
+  }
+
+  if (action==="night") {
+    cityNight=!cityNight;
+    $(".explore-world").classList.toggle("night-diorama",cityNight);
+  }
+
+  island.style.setProperty("--spin",cameraAngle+"deg");
+  island.style.setProperty("--zoom",cameraZoom);
+}
+
+/* ========================================
+   LAYOUT & PAGES
+======================================== */
+
+const navItems = [
+  ["home","⌂","Home"],
+  ["play","▷","Play"],
+  ["city","▧","City"],
+  ["learn","▤","Learn"],
+  ["profile","◎","Profile"]
+];
+
+function navigation() {
+  return navItems.map(([id,icon,label]) => `
+    <button class="${page===id ? "active" : ""}" onclick="navigate('${id}')">
+      <span>${icon}</span><span>${label}</span>
+    </button>
+  `).join("");
+}
+
+function render() {
+  document.body.classList.toggle("no-motion",!state.motion);
+  document.body.classList.toggle("night-theme",state.theme==="night");
+
+  $("#app").innerHTML = `
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="logo">
+          ${guardianLogo()}
+          <div class="brand">CHAOS CITY<small>RIPPLE EFFECT</small></div>
+        </div>
+
+        <div class="eyebrow muted" style="margin:0 15px 17px">Guardian Hub</div>
+        <nav class="nav">${navigation()}</nav>
+
+        <div class="sidebottom">
+          <div class="nav">
+            <button onclick="openLeaderboard()"><span>♜</span>Leaderboard</button>
+            <button onclick="openSettings()"><span>⚙</span>Settings</button>
+          </div>
+          <div class="sidecard">
+            <span class="pill">● KIRO SIAP MEMBANTU</span>
+            <p>Kota yang lebih aman dimulai dari pilihanmu.</p>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div class="topbrand">
+            ${guardianLogo()}
+            <span class="eyebrow">Traffic Guardian Command Center</span>
+          </div>
+          <div class="topright">
+            <span class="muted small">One choice. A thousand consequences.</span>
+            <span class="coin">◉ ${state.coins.toLocaleString("id-ID")}</span>
+            <button class="avatar" onclick="navigate('profile')" aria-label="Profil">
+              ${state.avatar}
+            </button>
+          </div>
+        </header>
+
+        <div id="content"></div>
+
+        <footer class="footer">
+          <span>CHAOS CITY / RIPPLE EFFECT</span>
+          <span>Small choices. Safer streets. 🌱</span>
+        </footer>
+      </main>
+    </div>
+    <nav class="mobile-nav">${navigation()}</nav>`;
+
+  const pages = {
+    home:homePage,
+    play:playPage,
+    city:cityPage,
+    learn:learnPage,
+    profile:profilePage
+  };
+
+  $("#content").innerHTML=pages[page]();
+  bindCityDrag();
+}
+
+function navigate(target) {
+  closeModal();
+  page=target;
+  render();
+  window.scrollTo({top:0,behavior:"auto"});
+}
+
+function missionCard(index) {
+  const m=missions[index];
+
+  return `
+    <button class="card missioncard" onclick="selectMission(${index})">
+      <div class="thumb">${featureArt(m.art)}</div>
+      <div class="missionbody">
+        <span class="tag">${m.district} ${isUnlocked(index) ? "" : "· TERKUNCI"}</span>
+        <h3>${m.name}</h3>
+        <p>${m.description}</p>
+        <div class="row small">
+          <span>${state.scores[index] ? "✓ "+state.scores[index]+"/100" : "◷ Misi singkat"}</span>
+          <span>${isUnlocked(index) ? "Mulai →" : "🔒"}</span>
+        </div>
+      </div>
+    </button>`;
+}
+
+function homePage() {
+  let next=missions.findIndex((_,i) => isUnlocked(i)&&!state.scores[i]);
+  if (next<0) next=0;
+
+  const kiroMessage=completedCount()===6
+    ? "Keenam distrik sudah pulih! Kota ini lebih aman berkat keputusanmu."
+    : state.lastOutcome==="risk"
+      ? "Tadi muncul risiko di jalan. Kita bisa belajar dan mencoba keputusan lain."
+      : completedCount()
+        ? "Pilihanmu mulai mengubah kota. Warga melihat jalan yang lebih tertib!"
+        : "Siap bikin kota ini lebih aman? Aku menemanimu di setiap persimpangan.";
+
+  return `
+    <div class="row welcome">
+      <div>
+        <span class="eyebrow muted">✨ A little hero. A big adventure.</span>
+        <h1>Welcome, ${escapeHTML(state.name)}! 👋</h1>
+        <p>Keputusan kecilmu bisa membuat perubahan besar.</p>
+      </div>
+      <span class="pill">
+        ✧ Level ${completedCount()+1} ·
+        ${completedCount()>3 ? "Safety Hero" : "Road Explorer"}
+      </span>
+    </div>
+
+    <div class="dashboard">
+      <div>
+        <section class="hero">
+          <div class="hero-text">
+            <span class="pill">✦ YOUR ADVENTURE STARTS HERE</span>
+            <h2>Small hero.<br><span>BIG impact!</span></h2>
+            <p>Jadilah Traffic Guardian.<br>Selamatkan kota, satu pilihan<br>baik pada satu waktu.</p>
+            <button class="btn" onclick="${state.started ? `selectMission(${next})` : "onboarding()"}">
+              ${state.started ? "Lanjutkan misi" : "Mulai petualangan"} ↗
+            </button>
+          </div>
+
+          ${createWorld()}
+
+          <div class="hero-footer">
+            <span><i class="live"></i>CHAOS CITY · LIVE</span>
+            <span>${missions.filter((_,i) => isUnlocked(i)).length} distrik tersedia</span>
+            <span>Diorama 3D · seret untuk memutar</span>
+          </div>
+        </section>
+
+        <div class="quick">
+          <button onclick="navigate('play')">${featureArt(0)}<b>Play Mission ↗</b><small>Setiap pilihan berarti</small></button>
+          <button onclick="navigate('city')">${featureArt(1)}<b>Explore City ↗</b><small>Temukan ceritamu</small></button>
+          <button onclick="navigate('learn')">${featureArt(2)}<b>Road Academy ↗</b><small>Belajar lewat bermain</small></button>
+          <button onclick="openAchievements()">${featureArt(3)}<b>Achievements ↗</b><small>Rayakan langkahmu</small></button>
+        </div>
+
+        <div class="row sectionrow">
+          <h2>Your next adventure</h2>
+          <button class="link" onclick="navigate('play')">Semua misi ↗</button>
+        </div>
+
+        <div class="mission-grid">${[0,1,2].map(missionCard).join("")}</div>
+      </div>
+
+      <div class="rightstack">
+        <section class="card kiro-card">
+          ${kiro()}
+          <span class="eyebrow muted">Your little co-pilot</span>
+          <h3 style="margin-top:12px">Hey, aku KIRO!</h3>
+          <p>${kiroMessage}</p>
+          <button class="link" onclick="showIntro()">Kenalan dengan KIRO →</button>
+
+          <hr style="border:0;border-top:1px solid #e9dec7;margin:22px 0">
+
+          <div class="row"><b class="small">CITY SAFETY</b><b>${citySafety()}%</b></div>
+          <div class="progress"><i style="width:${citySafety()}%"></i></div>
+          <div class="row small muted">
+            <span>${completedCount()}/6 misi selesai</span>
+            <span>${citySafety()>=70 ? "Semakin aman 🌱" : "Ayo pulihkan kota"}</span>
+          </div>
+        </section>
+
+        <section class="card challenge">
+          <div class="row"><span class="eyebrow">Daily Challenge</span><span>☀</span></div>
+          <h3 style="margin-top:18px">A little care.<br>A big difference.</h3>
+          <p>Selesaikan tiga latihan penyeberangan aman hari ini.</p>
+          <div class="progress">
+            <i style="width:${Math.min(100,dailyCount()/3*100)}%;background:#e7ad58"></i>
+          </div>
+          <div class="row small">
+            <b>◉ +150 coins</b>
+            <button class="link" onclick="openDaily()">
+              ${dailyCount()>=3 ? "Selesai ✓" : "Terima tantangan →"}
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>`;
+}
+
+function playPage() {
+  return `
+    <div class="pagehead">
+      <span class="eyebrow muted">Story Campaign</span>
+      <h1>Enam distrik. Satu kota.</h1>
+      <p>Pulihkan distrik dengan skor minimal 70. Dua distrik pertama terbuka sejak awal.</p>
+    </div>
+
+    <div class="grid">${missions.map((_,i) => missionCard(i)).join("")}</div>
+
+    <div class="grid" style="margin-top:24px">
+      <button class="card" onclick="openDetective()">
+        ${featureArt(4)}<h3>Traffic Detective</h3>
+        <p>Periksa bukti, susun kronologi, dan pecahkan kasus.</p>
+      </button>
+      <button class="card" onclick="openRoles()">
+        ${featureArt(1)}<h3>Role Swap</h3>
+        <p>Jalan yang sama. Lima sudut pandang berbeda.</p>
+      </button>
+      <button class="card" onclick="openDaily()">
+        ${featureArt(3)}<h3>Daily Challenge</h3>
+        <p>Tiga penyeberangan aman. Hadiah 150 coins.</p>
+      </button>
+    </div>`;
+}
+
+function districtDetail() {
+  const m=missions[selectedDistrict];
+  const unlocked=isUnlocked(selectedDistrict);
+
+  return `
+    <div>
+      <span class="eyebrow">
+        DISTRICT 0${selectedDistrict+1} /
+        ${unlocked ? "READY TO EXPLORE" : "LOCKED"}
+      </span>
+
+      ${featureArt(m.art)}
+      <h2>${m.district}</h2>
+
+      <span class="pill">
+        ${state.scores[selectedDistrict]
+          ? "✓ Distrik pulih"
+          : unlocked ? "✦ Misi tersedia" : "🔒 Belum terbuka"}
+      </span>
+
+      <p>${m.goal}</p>
+
+      <div class="mini-route">
+        ${missions.map((_,i) => `<i class="${state.scores[i] ? "done" : ""}"></i>`).join("")}
+      </div>
+
+      <button class="btn" onclick="selectMission(${selectedDistrict})" ${unlocked ? "" : "disabled"}>
+        ${unlocked ? "Mainkan misi ↗" : `Selesaikan ${selectedDistrict} misi`}
+      </button>
+
+      <p class="small">
+        ${unlocked
+          ? "Temui KIRO dan lihat dampak keputusanmu."
+          : "Rata-rata Safety minimal 70 untuk membuka distrik ini."}
+      </p>
+
+      <button class="link" onclick="openCitizenStory()">🌳 Dengarkan cerita warga →</button>
+    </div>
+
+    <div class="district-list">
+      ${missions.map((item,i) => `
+        <button class="${i===selectedDistrict ? "active" : ""}" onclick="selectDistrict(${i})">
+          <b>${isUnlocked(i) ? "0"+(i+1) : "♙"}</b>
+          ${item.district}
+          <span style="margin-left:auto">${state.scores[i] ? "✓" : "›"}</span>
+        </button>
+      `).join("")}
+    </div>`;
+}
+
+function cityPage() {
+  return `
+    <div class="pagehead">
+      <span class="eyebrow muted">The city is your playground</span>
+      <h1>Little city. Endless stories.</h1>
+      <p>Putar kotanya, pilih distrik, lalu buat perubahan. Setiap jalan punya cerita.</p>
+    </div>
+
+    <div class="explore-layout">
+      <section class="explore-world ${cityNight ? "night-diorama" : ""}">
+        <div class="world-label">
+          <span class="pill">● LIVE CITY / 3D DIORAMA</span>
+          <h3>Welcome to Chaos City</h3>
+          <span class="small muted">${completedCount()}/6 distrik dipulihkan</span>
+        </div>
+
+        ${createWorld(true)}
+
+        <div class="world-controls">
+          <button onclick="cameraControl('left')" aria-label="Putar kiri">↶</button>
+          <button onclick="cameraControl('right')" aria-label="Putar kanan">↷</button>
+          <button onclick="cameraControl('in')" aria-label="Perbesar">+</button>
+          <button onclick="cameraControl('out')" aria-label="Perkecil">−</button>
+          <button onclick="cameraControl('night')" aria-label="Siang atau malam">☾</button>
+          <button onclick="cameraControl('reset')" aria-label="Reset kamera">⌂</button>
+          <small>Seret kota untuk memutar</small>
+        </div>
+      </section>
+
+      <aside class="district-detail" id="districtDetail">${districtDetail()}</aside>
+    </div>
+
+    <div class="notice">
+      ${completedCount()>=3
+        ? 'Warga: “Jalan menuju rumah sakit sekarang lebih lapang. Pilihanmu terasa sampai ke sini.”'
+        : 'Warga: “Setiap hari kami melewati jalan yang sama. Bisakah kamu membuatnya lebih aman?”'}
+      <br><b>City Safety ${citySafety()}%</b>
+    </div>`;
+}
+
+function selectDistrict(index) {
+  selectedDistrict=index;
+  $("#districtDetail").innerHTML=districtDetail();
+
+  document.querySelectorAll(".city-pin").forEach((pin,i) => {
+    pin.classList.toggle("active",i===index);
+  });
+}
+
+function learnPage() {
+  return `
+    <div class="pagehead">
+      <span class="eyebrow muted">Road Academy</span>
+      <h1>Belajar dengan melakukan.</h1>
+      <p>Amati, coba, pahami. Temukan cara baru melihat jalan.</p>
+    </div>
+
+    <div class="grid">
+      <button class="card" onclick="openAcademy('sign')">
+        ${featureArt(0)}<h3>Sign Hunter</h3>
+        <p>Kenali rambu dan hubungkan dengan tindakan yang sesuai.</p>
+        <span class="pill">3 rambu · +50 coins</span>
+      </button>
+      <button class="card" onclick="openAcademy('puzzle')">
+        ${featureArt(1)}<h3>Intersection Puzzle</h3>
+        <p>Atur dua arus kendaraan agar melewati simpang bergantian.</p>
+        <span class="pill">Simulasi · +50 coins</span>
+      </button>
+      <button class="card" onclick="openAcademy('danger')">
+        ${featureArt(4)}<h3>Spot the Danger</h3>
+        <p>Temukan potensi bahaya sebelum perjalanan dimulai.</p>
+        <span class="pill">Observasi · +50 coins</span>
+      </button>
+    </div>
+
+    <div class="notice">
+      KIRO: “Game ini latihan memahami risiko. Jalan nyata memerlukan pengamatan,
+      kepatuhan pada aturan setempat, dan penyesuaian terhadap kondisi.”
+    </div>`;
+}
+
+function profilePage() {
+  return `
+    <div class="pagehead">
+      <span class="eyebrow muted">Guardian Profile</span>
+      <h1>${state.avatar} ${escapeHTML(state.name)}</h1>
+      <p>
+        Level ${completedCount()+1} · ${completedCount()>3 ? "Safety Hero" : "Road Explorer"}<br>
+        Progres disimpan di browser ini.
+      </p>
+    </div>
+
+    <div class="grid">
+      <div class="card"><span class="eyebrow">Guardian Coins</span><h1>◉ ${state.coins}</h1></div>
+      <div class="card"><span class="eyebrow">Missions Completed</span><h1>${completedCount()} / 6</h1></div>
+      <div class="card"><span class="eyebrow">City Safety</span><h1>${citySafety()}%</h1></div>
+    </div>
+
+    <div class="row wrap" style="justify-content:flex-start;margin:25px 0">
+      <button class="btn" onclick="openAchievements()">♜ Achievements</button>
+      <button class="btn light" onclick="openShop()">KIRO's Workshop</button>
+      <button class="btn light" onclick="openLeaderboard()">Leaderboard</button>
+      <button class="btn light" onclick="openSettings()">⚙ Settings</button>
+    </div>
+
+    <div class="card">
+      <h2>Jejak petualanganmu</h2>
+      ${missions.map((m,i) => `
+        <div class="row" style="padding:14px 0;border-bottom:1px solid var(--line)">
+          <span>${m.icon} ${m.name}</span>
+          <b class="small">${state.scores[i] ? state.scores[i]+"/100" : "Belum selesai"}</b>
+        </div>
+      `).join("")}
+    </div>`;
+}
+
+/* ========================================
+   MODALS & ONBOARDING
+======================================== */
+
+function modal(html) {
+  if (!$("#overlay").innerHTML) previousFocus=document.activeElement;
+
+  $("#overlay").innerHTML=`
+    <div class="modalbg">
+      <section class="modal" role="dialog" aria-modal="true" aria-label="Panel permainan">
+        <button class="close" onclick="closeModal()" aria-label="Tutup">×</button>
+        ${html}
+      </section>
+    </div>`;
+
+  document.body.style.overflow="hidden";
+  $("#overlay .close").focus();
+}
+
+function stopGame() {
+  clearInterval(gameTimer);
+  gameTimer=null;
+  game=null;
+}
+
+function closeModal() {
+  stopGame();
+  $("#overlay").innerHTML="";
+  document.body.style.overflow="";
+  if (previousFocus?.isConnected) previousFocus.focus();
+}
+
+function onboarding() {
+  selectedAvatar=state.avatar;
+
+  modal(`
+    <span class="eyebrow">Your story starts here</span>
+    <h2>Halo, Traffic Guardian!</h2>
+    <div style="display:flex;justify-content:center">${guardianLogo()}</div>
+    <p>Buat identitasmu. Chaos City membutuhkan pahlawan kecil sepertimu.</p>
+
+    <label for="guardianName">Nama Guardian</label>
+    <input id="guardianName" maxlength="24" placeholder="Nama panggilanmu"
+           value="${state.name==="Guardian" ? "" : escapeHTML(state.name)}">
+
+    <label>Pilih avatar</label>
+    <div class="avatars">
+      ${["🧑‍🚀","🧑‍🚒","🧑‍✈️","🦊"].map(a => `
+        <button class="${a===selectedAvatar ? "selected" : ""}"
+                onclick="pickAvatar('${a}')">${a}</button>
+      `).join("")}
+    </div>
+
+    <button class="btn" onclick="createGuardian()">Mulai kisahku →</button>`);
+}
+
+function pickAvatar(avatar) {
+  selectedAvatar=avatar;
+  document.querySelectorAll(".avatars button").forEach(button => {
+    button.classList.toggle("selected",button.textContent.trim()===avatar);
+  });
+}
+
+function createGuardian() {
+  state.name=$("#guardianName").value.trim()||"Guardian";
+  state.avatar=selectedAvatar;
+  state.started=true;
+  saveState();
+  render();
+  showIntro();
+}
+
+function showIntro() {
+  modal(`
+    ${kiro()}
+    <span class="eyebrow">Meet your co-pilot</span>
+    <h2>Aku KIRO. Partner kecilmu.</h2>
+    <p>Kota ini terhubung oleh ribuan keputusan. Tugas kita membuat perjalanan semua orang lebih aman.</p>
+    <div class="notice">
+      ① Amati situasi sebelum bergerak.<br>
+      ② Gunakan kontrol untuk bertindak.<br>
+      ③ Lihat efek berantai dan coba Rewind.<br>
+      ④ Raih skor minimal 70 untuk memulihkan distrik.
+    </div>
+    <button class="btn" onclick="${state.started ? "launchMission(0)" : "onboarding()"}">
+      Ayo mulai →
+    </button>`);
+}
+
+/* ========================================
+   PLAYABLE MISSIONS
+======================================== */
+
+function selectMission(index) {
+  if (!isUnlocked(index)) {
+    toast(`Butuh ${index} misi selesai dan rata-rata Safety minimal 70.`);
+    return;
+  }
+
+  if (!state.started) {
+    onboarding();
+    return;
+  }
+
+  launchMission(index);
+}
+
+function launchMission(index) {
+  stopGame();
+  const m=missions[index];
+
+  modal(`
+    <span class="eyebrow">${m.district} / Mission 0${index+1}</span>
+    <h2>${m.name}</h2>
+    <div class="notice">${m.goal}</div>
+
+    ${m.type==="light" ? `
+      <label for="lightContext">Konteks latihan</label>
+      <select id="lightContext">
+        <option value="far">Masih jauh: 95 meter dari garis henti</option>
+        <option value="near">Sangat dekat: 6 meter dari garis henti</option>
+      </select>
+    ` : ""}
+
+    <div class="gameview">
+      <canvas id="road" width="700" height="350"
+              aria-label="Simulasi lalu lintas dengan kendaraan pemain"></canvas>
+      <div class="hud">
+        <span id="speed">36 km/jam</span>
+        <span id="distance">95 m ke marka</span>
+        <span id="gameState">SIAP</span>
+      </div>
+    </div>
+
+    <p id="gameHint" class="small">
+      Tekan Mulai Simulasi. Gunakan tombol atau keyboard:
+      ↑ akselerasi, ↓ rem, S sein, H klakson.
+    </p>
+
+    <div id="gameButtons">
+      <button class="btn" onclick="beginMission(${index})">▷ Mulai simulasi</button>
+    </div>`);
+
+  drawRoad({
+    index,x:0,speed:10,time:0,signal:false,lights:false,
+    gap:2,ended:false,mode:"far"
+  });
+}
+
+function beginMission(index) {
+  const mode=$("#lightContext")?.value||"far";
+  if ($("#lightContext")) $("#lightContext").disabled=true;
+
+  game={
+    index,mode,
+    x:mode==="near" ? 89 : 0,
+    speed:10,
+    time:0,
+    signal:false,
+    lights:false,
+    gap:2,
+    rewinds:3,
+    history:[],
+    timelines:[],
+    ended:false,
+    score:null,
+    message:"",
+    accelerated:false,
+    emergencyBrake:false
+  };
+
+  $("#gameHint").textContent=mode==="near"
+    ? "Mode observasi: jarak hanya 6 m dan simpang telah diperiksa kosong. Nilai pilihanmu tanpa batas waktu. Jangan menambah kecepatan."
+    : "Amati kondisi lalu gunakan kontrol. Setiap klik rem mengurangi kecepatan.";
+
+  renderControls();
+  gameTimer=setInterval(gameTick,100);
+  drawRoad(game);
+}
+
+function renderControls() {
+  if (!game) return;
+  const g=game;
+  const type=missions[g.index].type;
+
+  let extra="";
+
+  if (g.mode==="near") {
+    extra=`<button class="btn yellow" onclick="control('continue')">Lanjut terkendali →</button>`;
+  } else if (type==="ambulance") {
+    extra=`<button class="btn" onclick="control('yield')">Beri jalan →</button>`;
+  } else if (type==="night") {
+    extra=`<button class="btn" onclick="control('lights')">☀ Lampu</button>`;
+  } else if (type==="parking") {
+    extra=`<button class="btn" onclick="chooseParking()">Pilih parkir →</button>`;
+  }
+
+  $("#gameButtons").innerHTML=`
+    <div class="controls">
+      <button onclick="control('accelerate')">↑ Akselerasi</button>
+      <button onclick="control('brake')">↓ Rem</button>
+      <button onclick="control('signal')">↔ Sein</button>
+      <button onclick="control('horn')">♬ Klakson</button>
+    </div>
+    <div class="row wrap">
+      <button class="btn light" onclick="rewindMission()" ${g.rewinds<1 ? "disabled" : ""}>
+        ↶ Rewind 10s (${g.rewinds})
+      </button>
+      ${extra}
+    </div>`;
+}
+
+function control(action) {
+  const g=game;
+  if (!g||g.ended) return;
+
+  beep();
+
+  switch(action) {
+    case "accelerate":
+      g.speed=Math.min(22,g.speed+3);
+      g.accelerated=true;
+      break;
+
+    case "brake":
+      if (g.mode==="near"&&g.speed>5) g.emergencyBrake=true;
+      g.speed=Math.max(0,g.speed-3);
+      break;
+
+    case "signal":
+      g.signal=!g.signal;
+      break;
+
+    case "lights":
+      g.lights=!g.lights;
+      break;
+
+    case "horn":
+      $("#gameHint").textContent="KIRO: Klakson bukan hak untuk memaksa pengguna jalan lain menyingkir.";
+      break;
+
+    case "yield":
+      finishMission(
+        g.signal&&g.speed<=4 ? 95 : 40,
+        g.signal&&g.speed<=4
+          ? "Kamu memberi ruang untuk ambulans dengan manuver terkendali."
+          : "Manuver terlalu cepat atau tanpa sein sulit diantisipasi pengguna lain."
+      );
+      break;
+
+    case "continue":
+      const safe=!g.accelerated&&!g.emergencyBrake;
+      finishMission(
+        safe ? 90 : 45,
+        safe
+          ? "Dalam skenario simpang kosong dan jarak sangat dekat ini, kamu melanjutkan terkendali tanpa menambah kecepatan."
+          : "Situasi ini membutuhkan pengamatan dan kendali, bukan akselerasi atau pengereman mendadak."
+      );
+      break;
+  }
+
+  if (game&&!game.ended) drawRoad(game);
+}
+
+function snapshotGame(g) {
+  return {
+    x:g.x,speed:g.speed,time:g.time,
+    signal:g.signal,lights:g.lights,gap:g.gap,
+    accelerated:g.accelerated,
+    emergencyBrake:g.emergencyBrake
+  };
+}
+
+function gameTick() {
+  const g=game;
+  if (!g||g.ended) return;
+
+  g.history.push(snapshotGame(g));
+  if (g.history.length>101) g.history.shift();
+
+  g.time+=.1;
+
+  if (g.mode==="near") {
+    if (g.speed===0) {
+      finishMission(
+        45,
+        "Pengereman mendadak ketika jarak sangat dekat dapat meningkatkan risiko. Pertimbangkan kembali konteks yang diberikan."
+      );
+    } else {
+      drawRoad(g);
+    }
+    return;
+  }
+
+  g.x+=g.speed*.1;
+  g.gap=Math.min(6,Math.max(.3,g.gap+(10-g.speed)*.012));
+
+  const type=missions[g.index].type;
+
+  if (["light","cross","night"].includes(type)&&g.speed===0) {
+    if (type==="night"&&!g.lights) {
+      $("#gameHint").textContent="Kendaraan sudah berhenti. Nyalakan lampu agar terlihat pengguna jalan lain.";
+    } else if (g.x<95) {
+      finishMission(95,"Kamu berhenti sebelum marka dan menjaga ruang penyeberangan.");
+    }
+  }
+
+  if (g.ended) return;
+
+  if (type==="highway"&&g.time>=8) {
+    finishMission(
+      g.gap>=3 ? 95 : 40,
+      g.gap>=3
+        ? "Celah yang cukup memberi waktu untuk bereaksi."
+        : "Jarak terlalu dekat ketika kendaraan di depan melambat."
+    );
+    return;
+  }
+
+  if (g.x>=95&&type!=="highway") {
+    finishMission(35,"Kamu memasuki area konflik tanpa menyediakan ruang aman. Terjadi situasi hampir bertabrakan.");
+    return;
+  }
+
+  if (g.time>=30) {
+    finishMission(55,"Situasi belum selesai. Coba kembali menggunakan tindakan yang sesuai petunjuk.");
+    return;
+  }
+
+  drawRoad(g);
+}
+
+function drawRoad(g) {
+  const canvas=$("#road");
+  if (!canvas) return;
+
+  const ctx=canvas.getContext("2d");
+  const type=missions[g.index].type;
+  const night=type==="night";
+
+  ctx.fillStyle=night ? "#30334e" : "#dcebd7";
+  ctx.fillRect(0,0,700,350);
+
+  const colors=["#af9be5","#ffbd8f","#83cbdc","#f1a3bd"];
+
+  for(let i=0;i<7;i++){
+    const x=15+i*105;
+    ctx.fillStyle=night ? "#565378" : colors[i%4];
+    ctx.fillRect(x,16,69,63);
+    ctx.fillStyle=night ? "#f9dc86" : "#fdf0cb";
+    ctx.fillRect(x+11,27,17,20);
+    ctx.fillRect(x+39,27,17,20);
+    ctx.fillStyle="#6a628f";
+    ctx.fillRect(x+30,56,15,23);
+  }
+
+  ctx.fillStyle="#7d849b";
+  ctx.fillRect(0,108,700,140);
+  ctx.fillRect(515,0,105,350);
+
+  ctx.fillStyle="#c7c3da";
+  ctx.fillRect(0,90,510,15);
+  ctx.fillRect(0,251,510,16);
+
+  ctx.strokeStyle="#fff3c9";
+  ctx.lineWidth=3;
+  ctx.setLineDash([22,17]);
+  ctx.beginPath();
+  ctx.moveTo(0,178);
+  ctx.lineTo(700,178);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.fillStyle="#fff5df";
+  for(let y=115;y<244;y+=22) ctx.fillRect(482,y,22,12);
+  ctx.fillRect(470,111,4,61);
+
+  const px=65+Math.min(g.x/95,1.1)*402;
+
+  if(night&&g.lights){
+    ctx.fillStyle="#ffeaa655";
+    ctx.beginPath();
+    ctx.moveTo(px+58,126);
+    ctx.lineTo(px+190,98);
+    ctx.lineTo(px+190,186);
+    ctx.lineTo(px+58,154);
+    ctx.fill();
+  }
+
+  ctx.fillStyle="#7756d5";
+  ctx.fillRect(px,126,58,29);
+  ctx.fillStyle="#bde7ed";
+  ctx.fillRect(px+32,130,15,21);
+  ctx.fillStyle="#403a5d";
+  ctx.fillRect(px+8,122,12,5);
+  ctx.fillRect(px+8,154,12,5);
+
+  if(g.signal){
+    ctx.fillStyle="#ffd15a";
+    ctx.fillRect(px+51,126,7,7);
+  }
+
+  const otherX=610-(g.time*22)%740;
+  ctx.fillStyle="#ffad97";
+  ctx.fillRect(otherX,199,49,27);
+  ctx.fillStyle="#647292";
+  ctx.fillRect(otherX+6,203,14,19);
+
+  ctx.fillStyle="#49445f";
+  ctx.fillRect(451,51,25,45);
+  ctx.fillStyle=g.time<6||g.mode==="near" ? "#ffd469" : "#ff7a8f";
+  ctx.beginPath();
+  ctx.arc(463.5,74,7,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.font="25px sans-serif";
+  if(type==="ambulance"){
+    ctx.fillText("🚑",Math.max(0,px-85),153);
+  }else{
+    ctx.fillText("🚶",523,91);
+  }
+
+  ctx.font="12px sans-serif";
+  ctx.fillStyle=night ? "#dfd8f2" : "#6a6484";
+  ctx.fillText("RUANG AMAN • AMATI SEKITAR",21,295);
+  ctx.fillText(missions[g.index].district,21,322);
+
+  $("#speed").textContent=Math.round(g.speed*3.6)+" km/jam";
+  $("#distance").textContent=type==="highway"
+    ? g.gap.toFixed(1)+" detik jarak"
+    : Math.max(0,Math.round(95-g.x))+" m ke marka";
+  $("#gameState").textContent=g.ended
+    ? "SELESAI"
+    : g.time.toFixed(1)+"s"+(g.signal ? " · SEIN" : "");
+}
+
+function chooseParking() {
+  if(!game||game.ended) return;
+
+  if(game.speed>0){
+    toast("Berhenti terkendali dahulu sebelum memilih tempat parkir.");
+    return;
+  }
+
+  $("#gameHint").innerHTML=`
+    <div class="choices">
+      <button onclick="finishMission(30,'Parkir di lajur menghalangi pesepeda dan kendaraan darurat.')">
+        Parkir di jalur utama
+      </button>
+      <button onclick="finishMission(game.signal?95:70,'Kantong parkir menjaga akses warga tetap terbuka. Gunakan sein sebelum bermanuver.')">
+        Parkir di kantong parkir
+      </button>
+    </div>`;
+}
+
+function finishMission(score,message) {
+  const g=game;
+  if(!g||g.ended) return;
+
+  clearInterval(gameTimer);
+  gameTimer=null;
+  g.ended=true;
+  g.score=score;
+  g.message=message;
+
+  const safe=score>=70;
+  const m=missions[g.index];
+  const chain=safe
+    ? m.chain
+    : ["Tindakan berisiko","Pengguna lain terhalang","Arus kota terganggu","Risiko keselamatan naik"];
+
+  const previous=g.timelines.at(-1);
+
+  drawRoad(g);
+
+  $("#gameHint").innerHTML=`
+    <b>${safe ? "✧ Pilihan yang melindungi" : "↶ Masih bisa diperbaiki"} · ${score}/100</b>
+    <br>${escapeHTML(message)}`;
+
+  $("#gameButtons").innerHTML=`
+    <div class="ripple ${safe ? "" : "bad"}">
+      ${chain.map((step,i) => `<div><b>0${i+1}</b><br>${step}</div>`).join("")}
+    </div>
+
+    <div class="notice">
+      KIRO: ${m.lesson}
+      ${g.mode==="near"
+        ? "<br><b>Konteks khusus:</b> simpang pada latihan ini sudah diperiksa kosong. Ini bukan izin umum menerobos lampu."
+        : ""}
+    </div>
+
+    ${previous ? `
+      <table>
+        <thead><tr><th>Timeline A</th><th>Timeline B</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>
+              ${previous.score===null ? "Belum selesai" : previous.score+"/100"}<br>
+              ${escapeHTML(previous.message)}
+            </td>
+            <td>${score}/100<br>${escapeHTML(message)}</td>
+          </tr>
+        </tbody>
+      </table>
+    ` : ""}
+
+    <div class="row wrap">
+      <button class="btn light" onclick="rewindMission()" ${g.rewinds<1 ? "disabled" : ""}>
+        ↶ Rewind 10s (${g.rewinds})
+      </button>
+      <button class="btn" onclick="saveMissionResult()">
+        ${safe ? "Simpan & klaim reward →" : "Selesai & evaluasi →"}
+      </button>
+    </div>`;
+}
+
+function rewindMission() {
+  const g=game;
+  if(!g||g.rewinds<1) return;
+
+  clearInterval(gameTimer);
+
+  g.timelines.push({
+    score:g.score,
+    message:g.message||"Keputusan di tengah perjalanan."
+  });
+
+  const snapshot=g.history[0]||{
+    x:g.mode==="near" ? 89 : 0,
+    speed:10,time:0,signal:false,lights:false,gap:2,
+    accelerated:false,emergencyBrake:false
+  };
+
+  g.rewinds--;
+
+  Object.assign(g,snapshot,{
+    ended:false,score:null,message:"",history:[]
+  });
+
+  $("#gameHint").textContent="Waktu diputar kembali hingga 10 detik. Coba tindakan yang berbeda.";
+  renderControls();
+  drawRoad(g);
+  gameTimer=setInterval(gameTick,100);
+}
+
+function saveMissionResult() {
+  const g=game;
+  if(!g) return;
+
+  if(g.score>=70){
+    const first=!state.scores[g.index];
+    state.scores[g.index]=Math.max(state.scores[g.index]||0,g.score);
+    state.lastOutcome="safe";
+    if(first) state.coins+=100;
+
+    saveState();
+    closeModal();
+    render();
+    confetti();
+
+    if(completedCount()===6){
+      showEnding();
+    }else{
+      toast(first ? "+100 Guardian Coins! Distrik semakin aman." : "Skor terbaik tersimpan. Hadiah misi hanya sekali.");
+    }
+  }else{
+    state.lastOutcome="risk";
+    saveState();
+    closeModal();
+    render();
+    toast("Misi belum pulih. Coba lagi dan raih skor minimal 70.");
+  }
+}
+
+function showEnding() {
+  modal(`
+    ${kiro()}
+    <span class="eyebrow">Campaign Complete</span>
+    <h2>Chaos City, restored! 🎉</h2>
+    <p>
+      Keenam distrik kembali terhubung dengan lebih aman.
+      Sekolah, rumah sakit, dan perumahan kini berbagi jalan dengan lebih baik.
+    </p>
+    <div class="notice">
+      <b>Ending: Kota Saling Menjaga</b><br>
+      City Safety: ${citySafety()}%<br>
+      Setiap keputusan kecilmu menjadi perubahan bersama.
+    </div>
+    <button class="btn" onclick="navigate('profile')">Lihat perjalananmu →</button>`);
+}
+
+/* ========================================
+   DAILY CHALLENGE
+======================================== */
+
+function openDaily() {
+  const n=dailyCount();
+
+  if(n>=3){
+    toast("Tantangan hari ini selesai. Kembali besok untuk mencoba lagi!");
+    return;
+  }
+
+  const scenarios=[
+    {
+      title:"Amati sebelum melangkah",
+      text:"Lampu pejalan kaki masih merah, tetapi jalan terlihat kosong.",
+      correct:"Tunggu sinyal aman, lalu pastikan kendaraan berhenti."
+    },
+    {
+      title:"Pandangan terhalang",
+      text:"Bus yang berhenti menutupi pandangan ke lajur berikutnya.",
+      correct:"Tunggu hingga seluruh lajur terlihat dan aman."
+    },
+    {
+      title:"Jalan belum kosong",
+      text:"Lampu pejalan kaki hijau, tetapi kendaraan masih melintas.",
+      correct:"Tunggu kendaraan berhenti dan amati kembali sebelum menyeberang."
+    }
+  ];
+
+  const offset=new Date().getDate()%3;
+  const scenario=scenarios[(n+offset)%3];
+
+  modal(`
+    <span class="eyebrow">Daily Challenge · ${n+1}/3</span>
+    <h2>${scenario.title}</h2>
+    <div class="scene-emoji">🚙　🚸　🚶</div>
+    <p>${scenario.text}</p>
+    <div class="choices">
+      <button onclick="toast('Amati seluruh lajur dan sinyal. Jangan menganggap kendaraan pasti berhenti.')">
+        Langsung menyeberang.
+      </button>
+      <button onclick="dailyCorrect()">${scenario.correct}</button>
+    </div>`);
+}
+
+function dailyCorrect() {
+  const n=dailyCount()+1;
+  state.daily[todayKey()]=n;
+  if(n===3) state.coins+=150;
+
+  saveState();
+  closeModal();
+  render();
+
+  if(n<3) openDaily();
+  else{
+    confetti();
+    toast("Tiga penyeberangan aman! +150 Guardian Coins.");
+  }
+}
+
+/* ========================================
+   TRAFFIC DETECTIVE
+======================================== */
+
+let foundEvidence=new Set();
+let chronologyOrder=[];
+
+function openDetective() {
+  foundEvidence=new Set();
+  chronologyOrder=[];
+
+  modal(`
+    <span class="eyebrow">Traffic Detective / Case 001</span>
+    <h2>Misteri jalur yang menyempit.</h2>
+    <p>Ambulans tertahan di Jalan Taman. Periksa semua sumber bukti sebelum menyimpulkan penyebab.</p>
+
+    <div class="scene-emoji">🚑　🚙　🚗<br>🌳　🅿️　🚲</div>
+
+    <div class="evidence">
+      ${["Rekaman CCTV","Marka jalan","Posisi mobil","Saksi warga"].map((label,i) => `
+        <button id="evidence${i}" onclick="inspectEvidence(${i})">🔍 ${label}</button>
+      `).join("")}
+    </div>
+
+    <div id="clue" class="notice">Klik sumber bukti untuk memeriksanya.</div>
+    <button class="btn" onclick="openChronology()">Susun kronologi →</button>`);
+}
+
+function inspectEvidence(index) {
+  foundEvidence.add(index);
+  $("#evidence"+index).classList.add("found");
+
+  const clues=[
+    "CCTV: 08:12 mobil berhenti di lajur. 08:13 antrean terbentuk. 08:14 ambulans tiba. Tidak ada rekaman sebelum 08:12.",
+    "Marka menunjukkan kantong parkir di sisi kiri. Lajur aktif bukan kantong parkir.",
+    "Separuh mobil berada di lajur aktif. Sepeda dan mobil lain harus bergantian lewat.",
+    'Saksi: “Sepertinya pengemudi sedang menelepon.” Ia tidak melihat layar telepon. Ini dugaan, bukan bukti penggunaan telepon.'
+  ];
+
+  $("#clue").textContent=clues[index];
+}
+
+function openChronology() {
+  if(foundEvidence.size<4){
+    toast("Periksa keempat sumber bukti dahulu.");
+    return;
+  }
+
+  chronologyOrder=[];
+
+  modal(`
+    <h2>Susun urutan kejadian.</h2>
+    <p>Klik peristiwa dari yang paling awal.</p>
+    <div class="choices">
+      <button onclick="addChronology(2,this)">Ambulans tiba dan tertahan.</button>
+      <button onclick="addChronology(0,this)">Mobil berhenti di lajur aktif.</button>
+      <button onclick="addChronology(1,this)">Antrean kendaraan terbentuk.</button>
+    </div>
+    <div id="chronologyInfo" class="notice">0/3 kejadian disusun.</div>`);
+}
+
+function addChronology(index,button) {
+  chronologyOrder.push(index);
+  button.disabled=true;
+  $("#chronologyInfo").textContent=chronologyOrder.length+"/3 kejadian disusun.";
+
+  if(chronologyOrder.length<3) return;
+
+  if(chronologyOrder.join(",")!=="0,1,2"){
+    $("#chronologyInfo").innerHTML=`
+      Periksa waktu CCTV: 08:12 → 08:13 → 08:14.<br>
+      <button class="btn light" style="margin-top:12px" onclick="openChronology()">Susun ulang</button>`;
+    return;
+  }
+
+  modal(`
+    <h2>Kesimpulan mana yang didukung bukti?</h2>
+    <div class="choices">
+      <button onclick="toast('Penggunaan telepon dan motif pengemudi belum terbukti.')">
+        Pengemudi menelepon dan sengaja menghambat ambulans.
+      </button>
+      <button onclick="solveCase()">
+        Mobil mempersempit lajur; antrean yang terbentuk menghambat ambulans.
+      </button>
+      <button onclick="toast('Tidak ada bukti kegagalan lampu lalu lintas dalam rekaman.')">
+        Lampu lalu lintas rusak.
+      </button>
+    </div>`);
+}
+
+function solveCase() {
+  const first=!state.cases;
+  state.cases=1;
+  if(first) state.coins+=100;
+  saveState();
+  confetti();
+
+  modal(`
+    ${featureArt(4)}
+    <h2>Case Solved · 100/100</h2>
+    <p>Kamu memeriksa empat bukti, menyusun kronologi, dan membedakan fakta dari dugaan.</p>
+    <div class="notice">
+      Mobil menghalangi lajur → antrean → ambulans tertahan.<br>
+      Motif pengemudi tidak dapat dipastikan dari bukti yang tersedia.
+    </div>
+    <button class="btn" onclick="closeModal();render()">
+      ${first ? "+100 coins · " : ""}Tutup kasus ✓
+    </button>`);
+}
+
+/* ========================================
+   ROLE SWAP
+======================================== */
+
+function openRoles() {
+  modal(`
+    <span class="eyebrow">Role Swap</span>
+    <h2>Satu zebra cross. Lima perspektif.</h2>
+    <div class="evidence">
+      <button onclick="showRole('motor')">🏍️ Motor</button>
+      <button onclick="showRole('walker')">🚶 Pejalan kaki</button>
+      <button onclick="showRole('bike')">🚲 Pesepeda</button>
+      <button onclick="showRole('car')">🚙 Mobil</button>
+      <button onclick="showRole('ambulance')">🚑 Ambulans</button>
+    </div>
+    <div id="roleScene" class="notice"></div>
+    <div class="choices">
+      <button onclick="roleDecision(false)">Motor tetap menutup zebra cross.</button>
+      <button onclick="roleDecision(true)">
+        Pengendara memeriksa ruang dan mengosongkan zebra cross ketika aman.
+      </button>
+    </div>
+    <div id="roleFeedback"></div>`);
+
+  showRole("motor");
+}
+
+function showRole(role) {
+  const stories={
+    motor:'Pengendara motor: “Aku hanya maju sedikit.” Tetapi roda depanmu menutup ruang penyeberangan.',
+    walker:"Pejalan kaki: motor menutup jalurmu. Menunggu lebih aman daripada memaksa masuk ke arus kendaraan.",
+    bike:"Pesepeda: orang yang menghindari motor bisa masuk ke jalurmu. Perlambat dan beri ruang.",
+    car:"Pengemudi mobil: motor di marka membatasi pandangan terhadap pejalan kaki. Jangan mendahului sembarangan.",
+    ambulance:"Pengemudi ambulans: ruang simpang menyempit. Sirene tidak menghilangkan kebutuhan mengamati sekitar."
+  };
+
+  $("#roleScene").textContent=stories[role];
+  $("#roleFeedback").innerHTML="";
+}
+
+function roleDecision(safe) {
+  $("#roleFeedback").innerHTML=`
+    <div class="ripple ${safe ? "" : "bad"}">
+      <div>${safe ? "Ruang diperiksa" : "Marka terhalang"}</div>
+      <div>${safe ? "Marka dikosongkan" : "Orang lain menunggu"}</div>
+      <div>${safe ? "Semua berbagi jalan" : "Risiko konflik meningkat"}</div>
+    </div>
+    <p>
+      KIRO:
+      ${safe
+        ? "Mengosongkan marka dilakukan hanya ketika manuver aman. Jangan mundur tanpa memeriksa belakang."
+        : "Satu halangan kecil memengaruhi perjalanan orang lain. Coba perspektif yang berbeda."}
+    </p>`;
+}
+
+/* ========================================
+   ROAD ACADEMY
+======================================== */
+
+let signIndex=0;
+let dangerFound=new Set();
+let puzzleStep=0;
+
+function openAcademy(type) {
+  if(type==="sign"){
+    signIndex=0;
+    showSign();
+    return;
+  }
+
+  if(type==="danger"){
+    dangerFound=new Set();
+
+    modal(`
+      <span class="eyebrow">Spot the Danger</span>
+      <h2>Temukan tiga potensi bahaya.</h2>
+      <p>Klik objek yang memerlukan perhatian sebelum melanjutkan perjalanan.</p>
+      <div class="evidence">
+        <button onclick="findDanger(0,true,this)">🚪 Pintu mobil terbuka</button>
+        <button onclick="findDanger(1,false,this)">🌳 Pohon di taman</button>
+        <button onclick="findDanger(2,true,this)">⚽ Bola di tepi jalan</button>
+        <button onclick="findDanger(3,true,this)">🛢️ Tumpahan di jalan</button>
+        <button onclick="findDanger(4,false,this)">🪑 Bangku taman</button>
+      </div>
+      <div id="academyInfo" class="notice">0/3 bahaya ditemukan.</div>
+      <div id="academyFinish"></div>`);
+    return;
+  }
+
+  puzzleStep=0;
+
+  modal(`
+    <span class="eyebrow">Intersection Puzzle</span>
+    <h2>Dua arus. Satu persimpangan.</h2>
+    <p>Lewatkan arus A lalu B. Beri fase semua merah untuk pengosongan simpang di antaranya.</p>
+    <div id="junction" class="scene-emoji">🚙 A　🚦　B 🚕</div>
+    <div class="controls">
+      <button onclick="puzzleAction('A')">A hijau</button>
+      <button onclick="puzzleAction('red')">Semua merah</button>
+      <button onclick="puzzleAction('B')">B hijau</button>
+      <button onclick="puzzleAction('both')">Keduanya hijau</button>
+    </div>
+    <div id="academyInfo" class="notice">Kedua arus sedang menunggu.</div>`);
+}
+
+function showSign() {
+  const signs=[
+    {symbol:"⛔",right:"Jangan masuk dari arah ini.",wrong:"Boleh masuk jika jalan terlihat kosong."},
+    {symbol:"🛑",right:"Berhenti dan amati sebelum melanjutkan.",wrong:"Cukup membunyikan klakson."},
+    {symbol:"🚫 🅿️",right:"Cari tempat parkir yang diperbolehkan.",wrong:"Parkir sebentar di sini."}
+  ];
+
+  const s=signs[signIndex];
+  const correct=`<button onclick="correctSign()">${s.right}</button>`;
+  const wrong=`<button onclick="toast('Coba lagi. Hubungkan simbol dengan larangan atau perintahnya.')">${s.wrong}</button>`;
+
+  modal(`
+    <span class="eyebrow">Sign Hunter · ${signIndex+1}/3</span>
+    <h2>Rambu apa yang kamu temukan?</h2>
+    <div class="scene-emoji">🌳　${s.symbol}　🏠</div>
+    <p>Pilih tindakan yang sesuai.</p>
+    <div class="choices">${signIndex%2===0 ? correct+wrong : wrong+correct}</div>`);
+}
+
+function correctSign() {
+  signIndex++;
+  if(signIndex>=3) academyComplete("sign");
+  else showSign();
+}
+
+function findDanger(index,dangerous,button) {
+  if(!dangerous){
+    toast("Objek ini berada di luar jalur dan bukan bahaya pada adegan ini.");
+    return;
+  }
+
+  dangerFound.add(index);
+  button.classList.add("found");
+
+  const messages={
+    0:"Pintu dapat terbuka ke jalur kendaraan. Beri jarak yang cukup.",
+    2:"Bola bisa diikuti anak. Perlambat dan amati sekitar.",
+    3:"Permukaan licin dapat mengurangi kendali kendaraan."
+  };
+
+  $("#academyInfo").textContent=dangerFound.size+"/3 · "+messages[index];
+
+  if(dangerFound.size===3){
+    $("#academyFinish").innerHTML=`
+      <button class="btn" onclick="academyComplete('danger')">Selesaikan latihan →</button>`;
+  }
+}
+
+function puzzleAction(action) {
+  if(action==="both"){
+    puzzleStep=0;
+    $("#junction").textContent="⚠️　Konflik arus　⚠️";
+    $("#academyInfo").textContent="Kedua arus berpotongan. Semua kendaraan dihentikan. Mulai kembali dari A.";
+    return;
+  }
+
+  if(puzzleStep===0&&action==="A"){
+    puzzleStep=1;
+    $("#junction").textContent="A 🚙 →　　🚕 B menunggu";
+    $("#academyInfo").textContent="Arus A telah melintas. Pilih semua merah untuk mengosongkan simpang.";
+  }else if(puzzleStep===1&&action==="red"){
+    puzzleStep=2;
+    $("#junction").textContent="🔴　Simpang kosong　🔴";
+    $("#academyInfo").textContent="Simpang sudah kosong. Sekarang beri hijau ke B.";
+  }else if(puzzleStep===2&&action==="B"){
+    academyComplete("puzzle");
+  }else{
+    $("#academyInfo").textContent="Urutan latihan: A → semua merah → B.";
+  }
+}
+
+function academyComplete(type) {
+  const first=!state.academy[type];
+  state.academy[type]=true;
+  if(first) state.coins+=50;
+
+  saveState();
+  confetti();
+
+  const lessons={
+    sign:"Rambu memberi informasi, larangan, atau perintah. Hubungkan simbol dengan tindakan sebelum tiba di titik konflik.",
+    danger:"Antisipasi pintu terbuka, anak yang mungkin mengejar bola, dan jalan licin. Perlambat sebelum bahaya terlalu dekat.",
+    puzzle:"Memisahkan arus yang berkonflik dan memberi waktu pengosongan membantu mencegah tabrakan. Ini simulasi edukasi, bukan alat pengaturan jalan nyata."
+  };
+
+  modal(`
+    ${kiro()}
+    <h2>Pelajaran kecil, dampak besar!</h2>
+    <p>${lessons[type]}</p>
+    <div class="notice">
+      ${first ? "+50 Guardian Coins!" : "Latihan selesai ulang. Hadiah sudah pernah diklaim."}
+    </div>
+    <button class="btn" onclick="closeModal();render()">Kembali ke Academy</button>`);
+}
+
+/* ========================================
+   ACHIEVEMENTS, SHOP & SETTINGS
+======================================== */
+
+function openAchievements() {
+  const badges=[
+    ["🌱","First Ripple",completedCount()>=1,"Selesaikan misi pertama."],
+    ["🛡️","Safety Hero",completedCount()===6,"Pulihkan keenam distrik."],
+    ["🔍","Truth Seeker",state.cases>0,"Selesaikan investigasi."],
+    ["🎓","Road Scholar",Object.keys(state.academy).length===3,"Selesaikan tiga aktivitas Academy."],
+    ["☀","Daily Guardian",dailyCount()>=3,"Selesaikan tantangan hari ini."],
+    ["🚑","City Rescuer",!!state.scores[2],"Pulihkan Hospital Zone."]
+  ];
+
+  modal(`
+    <span class="eyebrow">Achievement Collection</span>
+    <h2>Rayakan setiap kemajuan.</h2>
+    <div class="grid">
+      ${badges.map(([icon,name,unlocked,description]) => `
+        <div class="card" style="opacity:${unlocked ? 1 : .48}">
+          <div class="badge">${unlocked ? icon : "🔒"}</div>
+          <h3>${name}</h3>
+          <p class="small">${description}</p>
+        </div>
+      `).join("")}
+    </div>`);
+}
+
+function openLeaderboard() {
+  const records=Object.entries(state.scores).sort((a,b) => b[1]-a[1]);
+
+  modal(`
+    <span class="eyebrow">Local Leaderboard</span>
+    <h2>Rekor Guardian di browser ini.</h2>
+    <p>Catatan pribadi dari misi yang selesai. Belum terhubung ke peringkat pemain online.</p>
+    <table>
+      <thead><tr><th>Misi</th><th>Skor terbaik</th></tr></thead>
+      <tbody>
+        ${records.length
+          ? records.map(([index,score]) => `
+              <tr><td>${missions[index].name}</td><td>${score}/100</td></tr>
+            `).join("")
+          : '<tr><td colspan="2">Belum ada rekor. Mulai misi pertamamu!</td></tr>'}
+      </tbody>
+    </table>
+    <div class="notice">
+      ${completedCount()} misi dipulihkan ·
+      ${state.cases} kasus dipecahkan ·
+      ${citySafety()}% rata-rata keselamatan
+    </div>`);
+}
+
+function openSettings() {
+  modal(`
+    <h2>Settings ⚙</h2>
+
+    <label for="editName">Nama Guardian</label>
+    <input id="editName" maxlength="24" value="${escapeHTML(state.name)}">
+
+    <label for="soundSetting">Suara kontrol</label>
+    <select id="soundSetting">
+      <option value="off" ${state.sound ? "" : "selected"}>Nonaktif</option>
+      <option value="on" ${state.sound ? "selected" : ""}>Aktif</option>
+    </select>
+
+    <label for="motionSetting">Animasi dekoratif</label>
+    <select id="motionSetting">
+      <option value="on" ${state.motion ? "selected" : ""}>Aktif</option>
+      <option value="off" ${state.motion ? "" : "selected"}>Kurangi animasi</option>
+    </select>
+
+    <div class="notice">
+      Bahasa: Indonesia. Nama misi dipertahankan dalam bahasa Inggris.<br>
+      Progres disimpan di browser/perangkat ini.
+    </div>
+
+    <button class="btn" onclick="saveSettings()">Simpan pengaturan</button>`);
+}
+
+function saveSettings() {
+  state.name=$("#editName").value.trim()||"Guardian";
+  state.sound=$("#soundSetting").value==="on";
+  state.motion=$("#motionSetting").value==="on";
+
+  saveState();
+  closeModal();
+  render();
+  toast("Pengaturan tersimpan.");
+}
+
+function openShop() {
+  modal(`
+    <span class="eyebrow">Guardian Coins Shop</span>
+    <h2>KIRO's Workshop</h2>
+    <p>Gunakan coins untuk gaya. Reward tidak menghapus konsekuensi keselamatan.</p>
+    <div class="notice">Saldo: <b>◉ ${state.coins}</b></div>
+
+    <div class="grid">
+      <button class="card" onclick="buyItem('garden')">
+        <div class="badge">🌳</div><h3>Garden City</h3><p>Tema awal · Gratis</p>
+      </button>
+
+      <button class="card" onclick="buyItem('night')">
+        <div class="badge">🌙</div><h3>Twilight City</h3>
+        <p>${state.ownedNight ? "Sudah dimiliki" : "200 coins"}</p>
+      </button>
+
+      <button class="card" onclick="buyItem('gold')">
+        <div class="badge">✨</div><h3>Golden KIRO</h3>
+        <p>${state.ownedGold ? "Sudah dimiliki · klik untuk mengganti" : "150 coins"}</p>
+      </button>
+    </div>`);
+}
+
+function buyItem(item) {
+  if(item==="garden"){
+    state.theme="garden";
+  }
+
+  if(item==="night"){
+    if(!state.ownedNight){
+      if(state.coins<200){
+        toast("Butuh 200 coins. Selesaikan misi atau Road Academy.");
+        return;
+      }
+      state.coins-=200;
+      state.ownedNight=true;
+    }
+    state.theme="night";
+  }
+
+  if(item==="gold"){
+    if(!state.ownedGold){
+      if(state.coins<150){
+        toast("Butuh 150 coins untuk Golden KIRO.");
+        return;
+      }
+      state.coins-=150;
+      state.ownedGold=true;
+    }
+    state.kiroGold=!state.kiroGold;
+  }
+
+  saveState();
+  closeModal();
+  render();
+  toast("Gaya Guardian diperbarui!");
+}
+
+function openCitizenStory() {
+  modal(`
+    <span class="eyebrow">Hidden City Story</span>
+    <h2>Sepucuk pesan dari taman. 🌳</h2>
+    <p>
+      ${completedCount()>2
+        ? "“Sekarang anakku bisa berjalan ke sekolah bersama teman-temannya. Terima kasih sudah menjaga ruang untuk mereka.”"
+        : "“Aku ingin anakku bisa berjalan ke sekolah dengan aman. Bisakah kamu membantu memulihkan zebra cross di School District?”"}
+    </p>
+    <button class="btn" onclick="selectMission(1)">Kunjungi School District →</button>`);
+}
+
+/* ========================================
+   KEYBOARD & ACCESSIBILITY
+======================================== */
+
+document.addEventListener("keydown",event => {
+  if(event.key==="Escape"&&$("#overlay").innerHTML){
+    closeModal();
+    return;
+  }
+
+  if(event.key==="Tab"&&$("#overlay").innerHTML){
+    const focusable=Array.from(
+      $("#overlay").querySelectorAll(
+        'button:not([disabled]),input:not([disabled]),select:not([disabled]),[tabindex="0"]'
+      )
+    ).filter(element => element.getClientRects().length);
+
+    if(focusable.length){
+      const first=focusable[0];
+      const last=focusable.at(-1);
+
+      if(event.shiftKey&&document.activeElement===first){
+        event.preventDefault();
+        last.focus();
+      }else if(!event.shiftKey&&document.active
